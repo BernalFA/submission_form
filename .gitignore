@@ -1,0 +1,10 @@
+# Byte-compiled
+__pycache__/
+
+# databases
+instance/
+
+# virtual env
+venv/
+.venv
+.env

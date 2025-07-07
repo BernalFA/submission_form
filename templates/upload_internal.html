@@ -1,0 +1,79 @@
+{% extends 'upload.html' %}
+
+{% block section %}
+
+<div class="container">
+    <div class="card p-2 p-md-5 border rounded-3 bg-light">
+        <form action="/upload_internal" method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="exp_name" class="form-label">Enso experiment name</label>
+                    <input type="text" class="form-control" id="exp_name" name="exp_name" placeholder="BM-600B" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="stereo_comment" class="form-label">Stereo comment</label>
+                    <input type="text" class="form-control" id="stereo_comment" name="stereo_comment" placeholder="racemic mixture">
+                </div>
+                <div class="col-md-2">
+                    <label for="p_num" class="form-label">Product No.</label>
+                    <input type="int" class="form-control" id="p_num" name="p_num" placeholder="2">
+                </div>
+                <div class="col-md-3">
+                    <label for="mw" class="form-label">Molecular Weight</label>
+                    <input type="float" class="form-control" id="mw" name="mw" placeholder="418">
+                </div>
+                <div class="col-md-3">
+                    <label for="amount" class="form-label">Amount (mg)</label>
+                    <input type="text" class="form-control" id="amount" name="amount" placeholder="2.1" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="vol" class="form-label">Volume (uL)</label>
+                    <input type="int" class="form-control" id="vol" name="vol" placeholder="502" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="conc" class="form-label">Conc. (mM)</label>
+                    <input type="float" class="form-control" id="conc" name="conc" placeholder="10" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="project" class="form-label">Project Name</label>
+                    <input type="text" class="form-control" id="project" name="project" placeholder="Bicyclomycin" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="comment" class="form-label">Comment</label>
+                    <input type="text" class="form-control" id="comment" name="comment">
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <button type="submit" class="btn btn-secondary">Add</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<br>
+
+{% if compounds | length > 0 %}
+<div class="container">
+    <div class="row g-3">
+        <div class="col-md-9"></div>
+        <div class="col-md-3 text-end">
+            {% if compounds | length == 1 %}
+            <div class="alert alert-success text-center" role="alert">
+            You have added {{ compounds | length }} compound
+            </div>
+            {% else %}
+            <div class="alert alert-success" role="alert">
+            You have added {{ compounds | length }} compounds
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
