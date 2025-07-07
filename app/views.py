@@ -44,7 +44,7 @@ def upload_internal():
             try:
                 db.session.add(new_entry)
                 db.session.commit()
-                return redirect(url_for("upload_internal"))
+                return redirect(url_for("main.upload_internal"))
             except Exception as e:
                 print(f"ERROR: {e}")
                 return f"ERROR: {e}"
