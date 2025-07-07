@@ -1,5 +1,9 @@
 from itertools import product
 
+from flask_wtf import FlaskForm
+from wtforms import StringField, SelectField
+from wtforms.validators import DataRequired
+
 
 ALLOWED_FIELDS = [
     "exp_name",
@@ -58,3 +62,10 @@ def make_input_valid(entry):
             else:
                 res[key] = value
     return res
+
+
+class UserDataForm(FlaskForm):
+    username = StringField("Full name", validators=[DataRequired()])
+    membership = SelectField(
+        "Affiliation", choices=[("mpi_do", "MPI Dortmund"), ("external", "External")]
+    )
