@@ -56,11 +56,11 @@ def upload_external():
     return render_template("upload_external.html")
 
 
-@main_bp.route("/summary")
-def summary():
+@main_bp.route("/summary_internal")
+def summary_internal():
     compounds = DataManager.query.all()
     user = UserManager.query.all()[0]
-    return render_template("summary.html", user=user, compounds=compounds)
+    return render_template("summary_internal.html", user=user, compounds=compounds)
 
 
 @main_bp.route("/end")
