@@ -1,9 +1,107 @@
-{% extends 'base_tmp.html' %}
+{% extends 'upload.html' %}
 
-{% block main %}
+{% block section %}
 
-<div class="alert alert-danger" role="alert">
-  Page under construction
+<div class="container">
+    <div class="card p-2 p-md-5 border rounded-3 bg-light">
+        <form action="/upload_external" method="POST">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label for="position" class="form-label">Position</label>
+                    <input type="text" class="form-control" id="position" name="position" placeholder="A01" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="supplier" class="form-label">Supplier</label>
+                    <input type="text" class="form-control" id="supplier" name="supplier" placeholder="Intervet">
+                </div>
+                <div class="col-md-3">
+                    <label for="supp_id" class="form-label">Supplier ID</label>
+                    <input type="text" class="form-control" id="supp_id" name="supp_id" placeholder="BM-600B" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="producer" class="form-label">Producer</label>
+                    <input type="text" class="form-control" id="producer" name="producer">
+                </div>
+                <div class="col-md-3">
+                    <label for="stereo_comment" class="form-label">Stereo comment</label>
+                    <input type="text" class="form-control" id="stereo_comment" name="stereo_comment" placeholder="racemic mixture">
+                </div>
+                <div class="col-md-3">
+                    <label for="mw" class="form-label">Molecular Weight</label>
+                    <input type="float" class="form-control" id="mw" name="mw" placeholder="418">
+                </div>
+                <div class="col-md-2">
+                    <label for="amount" class="form-label">Amount (mg)</label>
+                    <input type="text" class="form-control" id="amount" name="amount" placeholder="2.1" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="vol" class="form-label">Volume (uL)</label>
+                    <input type="int" class="form-control" id="vol" name="vol" placeholder="502" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="conc" class="form-label">Conc. (mM)</label>
+                    <input type="float" class="form-control" id="conc" name="conc" placeholder="10" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="project" class="form-label">Project Name</label>
+                    <input type="text" class="form-control" id="project" name="project" placeholder="Bicyclomycin" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="trivial_name" class="form-label">Trivial name</label>
+                    <input type="text" class="form-control" id="trivial_name" name="trivial_name" placeholder="Bicozamycin">
+                </div>
+                <div class="col-md-3">
+                    <label for="alt_name" class="form-label">Alternative Name</label>
+                    <input type="text" class="form-control" id="alt_name" name="alt_name" placeholder="Aizumycin">
+                </div>
+                <div class="col-md-2">
+                    <label for="cas" class="form-label">CAS Number</label>
+                    <input type="text" class="form-control" id="cas" name="cas" placeholder="38129-37-2">
+                </div>
+                <div class="col-md-7">
+                    <label for="smiles" class="form-label">SMILES string</label>
+                    <input type="text" class="form-control" id="smiles" name="smiles" placeholder="C[C@](CO)([C@@H]([C@@]12C(=O)N[C@@](C(=C)CCO1)(C(=O)N2)O)O)O" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="annotation" class="form-label">Annotation</label>
+                    <input type="text" class="form-control" id="annotation" name="annotation">
+                </div>
+                <div class="col-md-12">
+                    <label for="comment" class="form-label">Comment</label>
+                    <input type="text" class="form-control" id="comment" name="comment">
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <button type="submit" class="btn btn-secondary">Add</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
 </div>
+
+<br>
+
+{% if compounds | length > 0 %}
+<div class="container">
+    <div class="row g-3">
+        <div class="col-md-9"></div>
+        <div class="col-md-3 text-end">
+            {% if compounds | length == 1 %}
+            <div class="alert alert-success text-center" role="alert">
+            You have added {{ compounds | length }} compound
+            </div>
+            {% else %}
+            <div class="alert alert-success" role="alert">
+            You have added {{ compounds | length }} compounds
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}
