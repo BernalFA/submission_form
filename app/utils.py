@@ -18,29 +18,28 @@ ALLOWED_FIELDS = [
 ]
 
 
-def create_plate_positions():
-    nums = range(1, 13)
-    letters = [chr(character) for character in range(ord("A"), ord("H") + 1)]
-
-    plate_pos = []
-    for num, letter in product(nums, letters):
-        # print(letter, num)
-        if len(str(num)) == 1:
-            plate_pos.append(f"{letter}0{num}")
-        else:
-            plate_pos.append(f"{letter}{num}")
-    return plate_pos
-
-
 class PositionGenerator:
     def __init__(self):
-        self._positions = iter(create_plate_positions())
+        self._positions = iter(self._create_plate_positions())
 
     def get_position(self):
         try:
             return next(self._positions)
         except StopIteration:
             print("Plate full")
+
+    def _create_plate_positions(self):
+        nums = range(1, 13)
+        letters = [chr(character) for character in range(ord("A"), ord("H") + 1)]
+
+        plate_pos = []
+        for num, letter in product(nums, letters):
+            # print(letter, num)
+            if len(str(num)) == 1:
+                plate_pos.append(f"{letter}0{num}")
+            else:
+                plate_pos.append(f"{letter}{num}")
+        return plate_pos
 
 
 def make_input_valid(entry):
