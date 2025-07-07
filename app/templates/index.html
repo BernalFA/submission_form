@@ -8,34 +8,14 @@
 {% block main %}
 
 
-<!-- <form action="/upload" method="POST">
-    <div class="col">Are you member of the MPI Dortmund?</div>
-    <div class="form-check">
-        <label for="mpi-do">Yes</label>
-        <input type="checkbox" class="form-check-input" id="mpi-do">
-    </div>
-    <div class="form-check">
-        <label for="external">No</label>
-        <input type="checkbox" class="form-check-input" id="external">
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary" id="next-btn">Next</button>
-    </div>
-</form> -->
-
-
 <div class="container">
     <form method="POST" class="p-4 p-md-5 border rounded-3 bg-light">
         <div class="mb-3">
-            <!-- <label for="username" class="form-label">User name</label>
-            <input type="text" class="form-control" id="username"> -->
             {{ user_form.hidden_tag() }}
             {{ user_form.username.label(class="form-label") }}
             {{ user_form.username(class="form-control", placeholder="Name of the user") }}
         </div>
         <div class="mb-3">
-            <!-- <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label> -->
             {{ user_form.membership.label(class="form-label") }}
             {{ user_form.membership(class="form-select") }}
         </div>
