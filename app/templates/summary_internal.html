@@ -15,38 +15,40 @@
         User: {{ user.username }}
         </p>
         
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Position</th>
-                    <th scope="col">Enso experiment name</th>
-                    <th scope="col">Stereo comment</th>
-                    <th scope="col">Product No.</th>
-                    <th scope="col">Molecular weight</th>
-                    <th scope="col">Amount (mg)</th>
-                    <th scope="col">Volume (uL)</th>
-                    <th scope="col">Conc. (mM)</th>
-                    <th scope="col">Project name</th>
-                    <th scope="col">Comment</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for compound in compounds %} 
-                <tr>
-                    <th scope="row">{{ compound.position }}</th>
-                    <td>{{ compound.exp_name }}</td>
-                    <td>{{ compound.stereo_comment }}</td>
-                    <td>{{ compound.p_num }}</td>
-                    <td>{{ compound.mw }}</td>
-                    <td>{{ compound.amount }}</td>
-                    <td>{{ compound.vol }}</td>
-                    <td>{{ compound.conc }}</td>
-                    <td>{{ compound.project }}</td>
-                    <td>{{ compound.comment }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Position</th>
+                        <th scope="col">Enso experiment name</th>
+                        <th scope="col">Stereo comment</th>
+                        <th scope="col">Product No.</th>
+                        <th scope="col">Molecular weight</th>
+                        <th scope="col">Amount (mg)</th>
+                        <th scope="col">Volume (uL)</th>
+                        <th scope="col">Conc. (mM)</th>
+                        <th scope="col">Project name</th>
+                        <th scope="col">Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for compound in compounds %} 
+                    <tr>
+                        <th scope="row">{{ compound.position }}</th>
+                        <td>{{ compound.exp_name }}</td>
+                        <td>{{ compound.stereo_comment }}</td>
+                        <td>{{ compound.p_num }}</td>
+                        <td>{{ compound.mw }}</td>
+                        <td>{{ compound.amount }}</td>
+                        <td>{{ compound.vol }}</td>
+                        <td>{{ compound.conc }}</td>
+                        <td>{{ compound.project }}</td>
+                        <td>{{ compound.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
