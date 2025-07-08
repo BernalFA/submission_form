@@ -4,7 +4,7 @@ from app.extensions import db
 # define model using SQLAlchemy
 # based on YouTube video
 # https://www.youtube.com/watch?v=45P3xQPaYxc
-class DataManager(db.Model):
+class CompoundManagerInternal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     position = db.Column(db.String, unique=True)
     exp_name = db.Column(db.String)
@@ -21,6 +21,10 @@ class DataManager(db.Model):
 
     def __repr__(self):
         return f"Entry: {self.position}"
+
+
+class CompoundManagerExternal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
 
 
 class UserManager(db.Model):

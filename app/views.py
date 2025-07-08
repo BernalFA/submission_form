@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 
 from app.extensions import db
-from app.models import UserManager, DataManager
+from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
 from app.utils import PositionGenerator, make_input_valid, UserDataForm
 
 
@@ -34,13 +34,13 @@ def index():
 
 @main_bp.route("/upload_internal", methods=["GET", "POST"])
 def upload_internal():
-    compounds = DataManager.query.all()
+    compounds = CompoundManagerInternal.query.all()
     if request.method == "POST":
         entry = request.form
         entry = make_input_valid(entry)
         if entry:
             entry["position"] = position_generator.get_position()
-            new_entry = DataManager(**entry)
+            new_entry = CompoundManagerInternal(**entry)
             try:
                 db.session.add(new_entry)
                 db.session.commit()
@@ -58,14 +58,14 @@ def upload_external():
 
 @main_bp.route("/summary_internal")
 def summary_internal():
-    compounds = DataManager.query.all()
+    compounds = CompoundManagerInternal.query.all()
     user = UserManager.query.all()[0]
     return render_template("summary_internal.html", user=user, compounds=compounds)
 
 
 @main_bp.route("/summary_external")
 def summary_external():
-    compounds = DataManager.query.all()
+    compounds = CompoundManagerExternal.query.all()
     user = UserManager.query.all()[0]
     return render_template("summary_external.html", user=user, compounds=compounds)
 
