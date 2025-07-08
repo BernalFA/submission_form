@@ -15,6 +15,15 @@ ALLOWED_FIELDS = [
     "conc",
     "project",
     "comment",
+    "position",
+    "supplier",
+    "supp_id",
+    "producer",
+    "trivial_name",
+    "alt_name",
+    "cas",
+    "smiles",
+    "annotation"
 ]
 
 
