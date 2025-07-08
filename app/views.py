@@ -63,6 +63,13 @@ def summary_internal():
     return render_template("summary_internal.html", user=user, compounds=compounds)
 
 
+@main_bp.route("/summary_external")
+def summary_external():
+    compounds = DataManager.query.all()
+    user = UserManager.query.all()[0]
+    return render_template("summary_external.html", user=user, compounds=compounds)
+
+
 @main_bp.route("/end")
 def end():
     return render_template("end.html")
