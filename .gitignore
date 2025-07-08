@@ -8,3 +8,6 @@ instance/
 venv/
 .venv
 .env
+
+# files
+uploads/
