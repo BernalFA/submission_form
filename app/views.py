@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for, send_from_directory
+import os
+from flask import Blueprint, render_template, request, redirect, url_for, send_from_directory, flash
+from werkzeug.utils import secure_filename
 
 from app.extensions import db
 from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
-from app.utils import PositionGenerator, make_input_valid, UserDataForm
+from app.utils import PositionGenerator, make_input_valid, UserDataForm, allowed_file
 
 
 # define a generator for the plate position
@@ -94,6 +96,24 @@ def download_internal():
     return send_from_directory("downloads", filename, as_attachment=True)
 
 
-@main_bp.route("/upload_internal_from_file")
+@main_bp.route("/upload_internal_from_file", methods=["GET", "POST"])
 def upload_internal_from_file():
+    if request.method == "POST":
+        if "file" not in request.files:
+            flash("No file part")
+            return redirect(request.url)
+
+        file = request.files["file"]
+        if file.filename == "":
+            flash("No selected file")
+            return redirect(request.url)
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(main_bp.root_path, "uploads", filename))
+            # flash("File uploaded successfully!")
+            return redirect(url_for("main.upload_internal_from_file"))
+        else:
+            flash("Invalid file type!")
+            return redirect(request.url)
     return render_template("upload_internal_from_file.html")
