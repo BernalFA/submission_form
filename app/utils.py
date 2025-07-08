@@ -1,5 +1,7 @@
+from io import BytesIO
 from itertools import product
 
+import openpyxl
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField
 from wtforms.validators import DataRequired
@@ -84,3 +86,31 @@ ALLOWED_EXTENSIONS = {"xlsx"}
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+EXPECTED_HEADERS = [
+    "Position",
+    "Enso experiment name",
+    "Stereo comment",
+    "Product No",
+    "Molecular weight",
+    "Amount (mg)",
+    "Volume (µl)",
+    "Conc. (mM)",
+    "Project name",
+    "Comment",
+]
+
+
+# created by asking ChatGPT for template validation
+def validate_excel_template(file_bytes):
+    try:
+        wb = openpyxl.load_workbook(BytesIO(file_bytes))
+        sheet = wb.active  # or use wb["sheet1"] if specific sheet
+        headers = [cell.value for cell in next(sheet.iter_rows(min_row=1, max_row=1))]
+
+        return headers == EXPECTED_HEADERS
+
+    except Exception as e:
+        print("Excel validation error:", e)
+        return False

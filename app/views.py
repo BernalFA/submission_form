@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 
 from app.extensions import db
 from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
-from app.utils import PositionGenerator, make_input_valid, UserDataForm, allowed_file
+from app.utils import PositionGenerator, make_input_valid, UserDataForm, allowed_file, validate_excel_template
 
 
 # define a generator for the plate position
@@ -99,21 +99,30 @@ def download_internal():
 @main_bp.route("/upload_internal_from_file", methods=["GET", "POST"])
 def upload_internal_from_file():
     if request.method == "POST":
-        if "file" not in request.files:
-            flash("No file part")
-            return redirect(request.url)
-
         file = request.files["file"]
-        if file.filename == "":
+
+        # if "file" not in request.files:
+        #     flash("No file part")
+        #     return redirect(request.url)
+
+        if not file or file.filename == "":
             flash("No selected file")
             return redirect(request.url)
 
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(main_bp.root_path, "uploads", filename))
-            # flash("File uploaded successfully!")
-            return redirect(url_for("main.upload_internal_from_file"))
-        else:
+        if not allowed_file(file.filename):
             flash("Invalid file type!")
             return redirect(request.url)
+
+        filename = secure_filename(file.filename)
+        file_bytes = file.read()
+        file.seek(0)  # Reset stream pointer after reading
+
+        if not validate_excel_template(file_bytes):
+            flash("Uploaded Excel file does not match the expected template!")
+            return redirect(request.url)
+
+        filepath = os.path.join(main_bp.root_path, "uploads", filename)
+        file.save(filepath)
+        # flash("File uploaded successfully!")
+        return redirect(url_for("main.upload_internal_from_file"))
     return render_template("upload_internal_from_file.html")
