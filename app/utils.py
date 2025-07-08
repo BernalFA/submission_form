@@ -77,3 +77,10 @@ class UserDataForm(FlaskForm):
     membership = SelectField(
         "Affiliation", choices=[("mpi_do", "MPI Dortmund"), ("external", "External")]
     )
+
+
+ALLOWED_EXTENSIONS = {"xlsx"}
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
