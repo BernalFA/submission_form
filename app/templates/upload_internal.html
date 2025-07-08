@@ -1,6 +1,6 @@
 {% extends 'upload.html' %}
 
-{% block section %}
+{% block form %}
 
 <div class="container">
     <div class="card p-2 p-md-5 border rounded-3 bg-light">
@@ -74,7 +74,22 @@
         <div class="col-md-2"></div>
     </div>
 </div>
+{% else %}
+<br/>
+
+<div class="container">
+    <div class="d-flex justify-content-between">
+        <p class="text-secondary">
+            * In case of a large number of compounds, you can upload an Excel sheet <a href="{{ url_for('main.upload_internal_from_file') }}">here</a> with all the required information.
+        </p>
+    </div>
+</div>
 {% endif %}
+
+{% endblock %}
+
+
+{% block submit %}
 
 <hr>
 
@@ -86,6 +101,5 @@
         </div>
     </div>
 </div>
-
 
 {% endblock %}

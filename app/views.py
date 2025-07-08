@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, send_from_directory
 
 from app.extensions import db
 from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
@@ -86,3 +86,14 @@ def summary_external():
 @main_bp.route("/end")
 def end():
     return render_template("end.html")
+
+
+@main_bp.route("/download_internal")
+def download_internal():
+    filename = "INTERNAL_Compound_submission.xlsx"
+    return send_from_directory("downloads", filename, as_attachment=True)
+
+
+@main_bp.route("/upload_internal_from_file")
+def upload_internal_from_file():
+    return render_template("upload_internal_from_file.html")
