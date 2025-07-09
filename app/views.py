@@ -96,6 +96,12 @@ def download_internal():
     return send_from_directory("downloads", filename, as_attachment=True)
 
 
+@main_bp.route("/download_external")
+def download_external():
+    filename = "EXTERNAL_collaboration_Compound_submission.xlsx"
+    return send_from_directory("downloads", filename, as_attachment=True)
+
+
 @main_bp.route("/upload_internal_from_file", methods=["GET", "POST"])
 def upload_internal_from_file():
     if request.method == "POST":
@@ -117,7 +123,7 @@ def upload_internal_from_file():
         file_bytes = file.read()
         file.seek(0)  # Reset stream pointer after reading
 
-        if not validate_excel_template(file_bytes):
+        if not validate_excel_template(file_bytes, "internal"):
             flash("Uploaded Excel file does not match the expected template!")
             return redirect(request.url)
 
@@ -126,3 +132,31 @@ def upload_internal_from_file():
         # flash("File uploaded successfully!")
         return redirect(url_for("main.upload_internal_from_file"))
     return render_template("upload_internal_from_file.html")
+
+
+@main_bp.route("/upload_external_from_file", methods=["GET", "POST"])
+def upload_external_from_file():
+    if request.method == "POST":
+        file = request.files["file"]
+
+        if not file or file.filename == "":
+            flash("No selected file")
+            return redirect(request.url)
+
+        if not allowed_file(file.filename):
+            flash("Invalid file type!")
+            return redirect(request.url)
+
+        filename = secure_filename(file.filename)
+        file_bytes = file.read()
+        file.seek(0)  # Reset stream pointer after reading
+
+        if not validate_excel_template(file_bytes, "external"):
+            flash("Uploaded Excel file does not match the expected template!")
+            return redirect(request.url)
+
+        filepath = os.path.join(main_bp.root_path, "uploads", filename)
+        file.save(filepath)
+        # flash("File uploaded successfully!")
+        return redirect(url_for("main.upload_external_from_file"))
+    return render_template("upload_external_from_file.html")
