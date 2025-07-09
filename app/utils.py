@@ -88,28 +88,48 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-EXPECTED_HEADERS = [
-    "Position",
-    "Enso experiment name",
-    "Stereo comment",
-    "Product No",
-    "Molecular weight",
-    "Amount (mg)",
-    "Volume (µl)",
-    "Conc. (mM)",
-    "Project name",
-    "Comment",
-]
+EXPECTED_HEADERS = {
+    "internal": [
+        "Position",
+        "Enso experiment name",
+        "Stereo comment",
+        "Product No",
+        "Molecular weight",
+        "Amount (mg)",
+        "Volume (µl)",
+        "Conc. (mM)",
+        "Project name",
+        "Comment",
+    ],
+    "external": [
+        "Position",
+        "Supplier",
+        "Supplier ID",
+        "Producer",
+        "Stereo comment",
+        "Molecular weight",
+        "Amount (mg)",
+        "Volume (µl)",
+        "Conc. (mM)",
+        "Project name",
+        "Trivial name",
+        "Alternative names",
+        "CAS",
+        "SMILES",
+        "Annotation",
+        "Comment",
+    ],
+}
 
 
 # created by asking ChatGPT for template validation
-def validate_excel_template(file_bytes):
+def validate_excel_template(file_bytes, collaborator):
     try:
         wb = openpyxl.load_workbook(BytesIO(file_bytes))
         sheet = wb.active  # or use wb["sheet1"] if specific sheet
         headers = [cell.value for cell in next(sheet.iter_rows(min_row=1, max_row=1))]
 
-        return headers == EXPECTED_HEADERS
+        return headers == EXPECTED_HEADERS[collaborator]
 
     except Exception as e:
         print("Excel validation error:", e)
