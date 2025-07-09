@@ -104,6 +104,7 @@ def download_external():
 
 @main_bp.route("/upload_internal_from_file", methods=["GET", "POST"])
 def upload_internal_from_file():
+    compounds = CompoundManagerInternal.query.all()
     if request.method == "POST":
         file = request.files["file"]
 
@@ -153,11 +154,12 @@ def upload_internal_from_file():
                 return f"ERROR: {e}"
 
         return redirect(url_for("main.upload_internal_from_file"))
-    return render_template("upload_internal_from_file.html")
+    return render_template("upload_internal_from_file.html", compounds=compounds)
 
 
 @main_bp.route("/upload_external_from_file", methods=["GET", "POST"])
 def upload_external_from_file():
+    compounds = CompoundManagerExternal.query.all()
     if request.method == "POST":
         file = request.files["file"]
 
@@ -209,4 +211,4 @@ def upload_external_from_file():
                 return f"ERROR: {e}"
 
         return redirect(url_for("main.upload_external_from_file"))
-    return render_template("upload_external_from_file.html")
+    return render_template("upload_external_from_file.html", compounds=compounds)

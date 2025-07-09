@@ -81,6 +81,28 @@
     </div>
 </div>
 
+<br>
+
+{% if compounds | length > 0 %}
+<div class="container">
+    <div class="row g-3">
+        <div class="col-md-8"></div>
+        <div class="col-md-3 text-end">
+            {% if compounds | length == 1 %}
+            <div class="alert alert-success text-center" role="alert">
+            You have added {{ compounds | length }} compound
+            </div>
+            {% else %}
+            <div class="alert alert-success" role="alert">
+            You have added {{ compounds | length }} compounds
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block submit %}
