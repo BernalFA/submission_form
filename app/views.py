@@ -1,6 +1,6 @@
-import os
+import pandas as pd
 from flask import Blueprint, render_template, request, redirect, url_for, send_from_directory, flash
-from werkzeug.utils import secure_filename
+# from werkzeug.utils import secure_filename
 
 from app.extensions import db
 from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
@@ -119,7 +119,7 @@ def upload_internal_from_file():
             flash("Invalid file type!")
             return redirect(request.url)
 
-        filename = secure_filename(file.filename)
+        # filename = secure_filename(file.filename)
         file_bytes = file.read()
         file.seek(0)  # Reset stream pointer after reading
 
@@ -127,9 +127,31 @@ def upload_internal_from_file():
             flash("Uploaded Excel file does not match the expected template!")
             return redirect(request.url)
 
-        filepath = os.path.join(main_bp.root_path, "uploads", filename)
-        file.save(filepath)
+        # filepath = os.path.join(main_bp.root_path, "uploads", filename)
+        # file.save(filepath)
         # flash("File uploaded successfully!")
+        df = pd.read_excel(file)
+        df.dropna(subset=[col for col in df.columns if col != "Position"], how="all", inplace=True)
+
+        for _, row in df.iterrows():
+            new_entry = CompoundManagerInternal(
+                position=row["Position"],
+                exp_name=row["Enso experiment name"],
+                stereo_comment=row["Stereo comment"],
+                p_num=row["Product No"],
+                mw=row["Molecular weight"],
+                amount=row["Amount (mg)"],
+                vol=row["Volume (µl)"],
+                conc=row["Conc. (mM)"],
+                project=row["Project name"],
+                comment=row["Comment"],
+            )
+            try:
+                db.session.add(new_entry)
+                db.session.commit()
+            except Exception as e:
+                return f"ERROR: {e}"
+
         return redirect(url_for("main.upload_internal_from_file"))
     return render_template("upload_internal_from_file.html")
 
@@ -147,7 +169,7 @@ def upload_external_from_file():
             flash("Invalid file type!")
             return redirect(request.url)
 
-        filename = secure_filename(file.filename)
+        # filename = secure_filename(file.filename)
         file_bytes = file.read()
         file.seek(0)  # Reset stream pointer after reading
 
@@ -155,8 +177,36 @@ def upload_external_from_file():
             flash("Uploaded Excel file does not match the expected template!")
             return redirect(request.url)
 
-        filepath = os.path.join(main_bp.root_path, "uploads", filename)
-        file.save(filepath)
+        # filepath = os.path.join(main_bp.root_path, "uploads", filename)
+        # file.save(filepath)
         # flash("File uploaded successfully!")
+        df = pd.read_excel(file)
+        df.dropna(subset=[col for col in df.columns if col != "Position"], how="all", inplace=True)
+
+        for _, row in df.iterrows():
+            new_entry = CompoundManagerExternal(
+                position=row["Position"],
+                supplier=row["Supplier"],
+                supp_id=row["Supplier ID"],
+                producer=row["Producer"],
+                stereo_comment=row["Stereo comment"],
+                mw=row["Molecular weight"],
+                amount=row["Amount (mg)"],
+                vol=row["Volume (µl)"],
+                conc=row["Conc. (mM)"],
+                project=row["Project name"],
+                trivial_name=row["Trivial name"],
+                alt_name=row["Alternative names"],
+                cas=row["CAS"],
+                smiles=row["SMILES"],
+                annotation=row["Annotation"],
+                comment=row["Comment"],
+            )
+            try:
+                db.session.add(new_entry)
+                db.session.commit()
+            except Exception as e:
+                return f"ERROR: {e}"
+
         return redirect(url_for("main.upload_external_from_file"))
     return render_template("upload_external_from_file.html")
