@@ -1,0 +1,99 @@
+{% extends 'from_file.html' %}
+
+{% block form %}
+
+<div class="container">
+    <div class="row g-3">
+        <div class="col">
+            <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+                <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </symbol>
+            </svg>
+            <div class="alert alert-warning d-flex align-items-center justify-content-center" style="height: 46px;" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="16" height="16" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                <div>
+                    Submission using a file is incompatible with manually added data. If you want to continue with an existing manual entry, please <a href="{{ url_for('main.upload_external') }}">go back</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<div class="container">
+    <div class="row g-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="accordion" id="fileSelection">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            Get template
+                        </button>
+                    </h2>
+                    <div class="accordion-collapse collapse" id="collapseOne" data-bs-parent="#fileSelection">
+                        <div class="accordion-body">
+                            <div class="d-flex align-items-center">
+                                <span>
+                                    Here you can download an Excel sheet template to fill out all the information required for the registration. 
+                                </span>
+                                <a href="{{ url_for('main.download_external') }}" class="btn btn-secondary ms-3">Download Template</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Upload file
+                        </button>
+                    </h2>
+                    <div class="accordion-collapse collapse show" id="collapseTwo" data-bs-parent="#fileSelection">
+                        <div class="accordion-body">
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    Once you have completely and correctly filled out the Excel sheet, please upload it to our system. 
+                                </div>
+                                <br>
+                                <div class="col-md-12">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        <input type="file" name="file" required>
+                                        <button type="submit" class="btn btn-secondary">Upload file</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-2">
+                                {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                        <div class="alert alert-danger" role="alert">{{ message }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block submit %}
+
+<hr>
+
+<div class="container">
+    <div class="row g-3">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-end">
+            <a href="{{ url_for('main.summary_internal') }}" class="w-100 btn btn-primary">Next</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
