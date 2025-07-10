@@ -1,8 +1,12 @@
+import base64
+import io
 from io import BytesIO
 from itertools import product
 
 import openpyxl
 from flask_wtf import FlaskForm
+from rdkit import Chem
+from rdkit.Chem import Draw
 from wtforms import StringField, SelectField
 from wtforms.validators import DataRequired
 
@@ -134,3 +138,14 @@ def validate_excel_template(file_bytes, collaborator):
     except Exception as e:
         print("Excel validation error:", e)
         return False
+
+
+def smiles_to_png_base64(smiles):
+    try:
+        mol = Chem.MolFromSmiles(smiles)
+    except TypeError:
+        return None
+    img = Draw.MolToImage(mol, size=(200, 200))
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return base64.b64encode(buf.getvalue()).decode()

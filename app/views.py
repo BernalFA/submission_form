@@ -1,10 +1,11 @@
 import pandas as pd
-from flask import Blueprint, render_template, request, redirect, url_for, send_from_directory, flash
+from flask import Blueprint, render_template, request, redirect, url_for, send_from_directory, flash, Response
 # from werkzeug.utils import secure_filename
 
 from app.extensions import db
 from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
 from app.utils import PositionGenerator, make_input_valid, UserDataForm, allowed_file, validate_excel_template
+from app.utils import smiles_to_png_base64
 
 
 # define a generator for the plate position
@@ -203,6 +204,7 @@ def upload_external_from_file():
                 smiles=row["SMILES"],
                 annotation=row["Annotation"],
                 comment=row["Comment"],
+                png=smiles_to_png_base64(row["SMILES"])
             )
             try:
                 db.session.add(new_entry)
@@ -212,3 +214,12 @@ def upload_external_from_file():
 
         return redirect(url_for("main.upload_external_from_file"))
     return render_template("upload_external_from_file.html", compounds=compounds)
+
+
+@main_bp.route("/mol_png/<int:mol_id>")
+def mol_png(mol_id):
+    cmpd = CompoundManagerExternal.query.get_or_404(mol_id)
+    if not cmpd.png:
+        return Response("Image not found", status=404)
+    html = f'<img src="data:image/png;base64,{cmpd.png}" width="200" height="200">'
+    return html

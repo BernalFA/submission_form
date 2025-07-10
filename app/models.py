@@ -42,6 +42,7 @@ class CompoundManagerExternal(db.Model):
     smiles = db.Column(db.String)
     annotation = db.Column(db.String)
     comment = db.Column(db.String)
+    png = db.Column(db.Text)
 
 
 class UserManager(db.Model):
