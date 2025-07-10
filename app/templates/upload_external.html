@@ -24,7 +24,14 @@
                 </div>
                 <div class="col-md-3">
                     <label for="stereo_comment" class="form-label">Stereo comment</label>
-                    <input type="text" class="form-control" id="stereo_comment" name="stereo_comment" placeholder="racemic mixture">
+                    <select class="form-select" name="stereo_comment" id="stereo_comment" required>
+                        <option value="">Choose...</option>
+                        <option>Racemic</option>
+                        <option>Chiral</option>
+                        <option>Achiral</option>
+                        <option>Either</option>
+                        <option>Mixture</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
                     <label for="mw" class="form-label">Molecular Weight</label>
