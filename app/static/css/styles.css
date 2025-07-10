@@ -1,0 +1,5 @@
+.placeholder-lightgray::placeholder {
+    color: #b9b6b6;
+    opacity: 1;
+}
+
