@@ -7,7 +7,13 @@
         <form action="/upload_internal" method="POST">
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label for="exp_name" class="form-label">Enso experiment name</label>
+                    <label for="exp_name" class="form-label">
+                        Enso experiment name
+                        <i class="bi bi-info-circle"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="right" 
+                            title="Enter a valid experiment name as registered in Enso"></i>
+                    </label>
                     <input type="text" class="form-control" id="exp_name" name="exp_name" placeholder="BM-600B" required>
                 </div>
                 <div class="col-md-4">
@@ -22,7 +28,13 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label for="p_num" class="form-label">Product No.</label>
+                    <label for="p_num" class="form-label">
+                        Product No.
+                        <i class="bi bi-info-circle"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="right" 
+                            title="Enter the number of the product as registered in Enso (eg. 2 for 2nd)"></i>
+                    </label>
                     <input type="int" class="form-control" id="p_num" name="p_num" placeholder="2">
                 </div>
                 <div class="col-md-3">
@@ -46,7 +58,13 @@
                     <input type="text" class="form-control" id="project" name="project" placeholder="Bicyclomycin" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="comment" class="form-label">Comment</label>
+                    <label for="comment" class="form-label">
+                        Comment
+                        <i class="bi bi-info-circle"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="right" 
+                            title="Enter additional information here, e.g., enantiomeric purity (98% ee) in case of chiral compounds"></i>
+                    </label>
                     <input type="text" class="form-control" id="comment" name="comment">
                 </div>
             </div>
@@ -92,6 +110,16 @@
     </div>
 </div>
 {% endif %}
+
+<script>
+  // Enable tooltips
+  document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+      new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+</script>
 
 {% endblock %}
 
