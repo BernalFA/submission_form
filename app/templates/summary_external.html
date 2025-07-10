@@ -7,6 +7,16 @@
 
 {% block main %}
 
+<style>
+.table thead th {
+    position: sticky; /* keep header when scrolling */
+    top: 0;
+    background: #fff;
+    z-index: 2; /* ensures stacking above other elements */
+    box-shadow: 0 3px 0 0 #000; /* Adds a shadow line for extra visibility */
+}
+</style>
+
 <div class="container">
     <div class="card p-2 p-md-5 border rounded-3">
         <h2>Submission summary</h2>
@@ -15,7 +25,7 @@
         User: {{ user.username }}
         </p>
         
-        <div class="table-responsive">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
             <table class="table table-striped">
                 <thead>
                     <tr>
