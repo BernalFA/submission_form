@@ -2,6 +2,7 @@ from io import BytesIO
 from itertools import product
 
 import openpyxl
+import pandas as pd
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField
 from wtforms.validators import DataRequired
@@ -134,3 +135,39 @@ def validate_excel_template(file_bytes, collaborator):
     except Exception as e:
         print("Excel validation error:", e)
         return False
+
+
+def export_to_excel(user, compounds):
+    cols = [
+        "Position",
+        "Enso experiment name",
+        "Stereo comment",
+        "Product No.",
+        "Molecular weight",
+        "Amount (mg)",
+        "Volume (uL)",
+        "Conc. (mM)",
+        "Project name",
+        "Comment",
+    ]
+    order = [
+        "position",
+        "exp_name",
+        "stereo_comment",
+        "p_num",
+        "mw",
+        "amount",
+        "vol",
+        "conc",
+        "project",
+        "comment",
+    ]
+    cmpd_data = [c.__dict__ for c in compounds]
+    for row in cmpd_data:
+        row.pop("_sa_instance_state", None)
+        row.pop("id", None)
+    df = pd.DataFrame(cmpd_data)
+    df = df[order]
+    df.columns = cols
+    filepath = f"/home/freddy/Documents/{user.username}_{user.membership}.xlsx"
+    df.to_excel(filepath, index=False)

@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, send_f
 
 from app.extensions import db
 from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
-from app.utils import PositionGenerator, make_input_valid, UserDataForm, allowed_file, validate_excel_template
+from app.utils import PositionGenerator, make_input_valid, UserDataForm, allowed_file, validate_excel_template, export_to_excel
 
 
 # define a generator for the plate position
@@ -75,6 +75,7 @@ def upload_external():
 def summary_internal():
     compounds = CompoundManagerInternal.query.all()
     user = UserManager.query.all()[0]
+    export_to_excel(user, compounds)
     return render_template("summary_internal.html", user=user, compounds=compounds)
 
 
@@ -82,6 +83,7 @@ def summary_internal():
 def summary_external():
     compounds = CompoundManagerExternal.query.all()
     user = UserManager.query.all()[0]
+    export_to_excel(user, compounds)
     return render_template("summary_external.html", user=user, compounds=compounds)
 
 
