@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-6">
                 {{ user_form.membership.label(class="form-label") }}
-                {{ user_form.membership(class="form-select") }}
+                {{ user_form.membership(class="form-select", id="membership", onchange="toggleRadioField()") }}
             </div>
         </div>
         <div class="row mb-3">
@@ -26,10 +26,17 @@
                 {{ user_form.delivery.label(class="form-label") }}
                 {{ user_form.delivery(class="form-select") }}
             </div>
-            <div class="col-md-6">
-                {{ user_form.structures.label(class="form-label") }}
+            <div class="col-md-6" id="include_structures_wrapper" style="display: none;">
+                <label for="{{ user_form.include_structures.id }}">
+                    {{ user_form.include_structures.label(class="form-label") }}
+                    <i class="bi bi-info-circle"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="right"
+                        data-bs-html="true"
+                        title="Mark <strong>Yes</strong> if you provide SMILES strings in the following step."></i>
+                </label>
                 <div class="d-flex">
-                    {% for subfield in user_form.structures %}
+                    {% for subfield in user_form.include_structures %}
                     <div class="form-check me-5">
                         {{ subfield(class="form-check-input") }}
                         {{ subfield.label(class="form-check-label") }}
@@ -43,6 +50,27 @@
     </form>
 </div>
 
+<script>
+    // Show or hide the radio field section depending on select value
+    function toggleRadioField() {
+        const select = document.getElementById("membership");
+        const radioDiv = document.getElementById("include_structures_wrapper");
 
+        if (select.value === "external") {
+            radioDiv.style.display = "block";
+
+            // Initialize tooltips in the now-visible radio field
+            const tooltipTriggerList = [].slice.call(radioDiv.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+        } else {
+            radioDiv.style.display = "none";
+        }
+    }
+
+    // Initialize field visibility on page load
+    window.onload = function() {
+        toggleRadioField();
+    }
+</script>
 
 {% endblock %}
