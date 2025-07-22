@@ -4,7 +4,7 @@ from itertools import product
 import openpyxl
 import pandas as pd
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField
+from wtforms import StringField, SelectField, RadioField
 from wtforms.validators import DataRequired
 
 
@@ -79,6 +79,14 @@ class UserDataForm(FlaskForm):
     username = StringField("Full name", validators=[DataRequired()])
     membership = SelectField(
         "Affiliation", choices=[("mpi_do", "MPI Dortmund"), ("external", "External")]
+    )
+    delivery = SelectField(
+        "Compounds delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]
+    )
+    structures = RadioField(
+        "Will you share the compounds' structures?",
+        choices=[("true", "Yes"), ("false", "No")],
+        default="true"
     )
 
 

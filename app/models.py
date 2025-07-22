@@ -49,3 +49,5 @@ class UserManager(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String)
     membership = db.Column(db.String)
+    delivery = db.Column(db.String)
+    include_structures = db.Column(db.Boolean)
