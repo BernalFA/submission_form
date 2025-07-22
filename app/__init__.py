@@ -1,4 +1,5 @@
-from flask import Flask
+import uuid
+from flask import Flask, session
 
 from app.config import Config
 from app.extensions import db
@@ -12,6 +13,13 @@ def create_app():
     app.config.from_object(Config)
     # initialize extensions (SQLAlchemy)
     db.init_app(app)
+
+    # Define session logic (session id)
+    @app.before_request
+    def assign_session():
+        if "session_id" not in session:
+            session["session_id"] = str(uuid.uuid4())
+
     # add blueprint
     app.register_blueprint(main_bp)
 

@@ -6,6 +6,7 @@ from app.extensions import db
 # https://www.youtube.com/watch?v=45P3xQPaYxc
 class CompoundManagerInternal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.String(100))
     position = db.Column(db.String, unique=True)
     exp_name = db.Column(db.String)
     stereo_comment = db.Column(db.String)
@@ -26,6 +27,7 @@ class CompoundManagerInternal(db.Model):
 class CompoundManagerExternal(db.Model):
     __bind_key__ = "compounds_external"
     id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.String(100))
     position = db.Column(db.String, unique=True)
     supplier = db.Column(db.String)
     supp_id = db.Column(db.String)
@@ -48,6 +50,7 @@ class CompoundManagerExternal(db.Model):
 class UserManager(db.Model):
     __bind_key__ = "user"
     id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.String(100))
     username = db.Column(db.String)
     membership = db.Column(db.String)
     delivery = db.Column(db.String)
