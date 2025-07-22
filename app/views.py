@@ -59,20 +59,19 @@ def upload(membership):
     return render_template(template, compounds=compounds)
 
 
-@main_bp.route("/summary_internal")
-def summary_internal():
-    compounds = CompoundManagerInternal.query.all()
-    user = UserManager.query.all()[0]
-    export_to_excel(user, compounds)
-    return render_template("summary_internal.html", user=user, compounds=compounds)
+@main_bp.route("/summary/<membership>")
+def summary(membership):
+    if membership == "internal":
+        model = CompoundManagerInternal
+        template = "summary_internal.html"
+    elif membership == "external":
+        model = CompoundManagerExternal
+        template = "summary_external.html"
 
-
-@main_bp.route("/summary_external")
-def summary_external():
-    compounds = CompoundManagerExternal.query.all()
+    compounds = model.query.all()
     user = UserManager.query.all()[0]
-    export_to_excel(user, compounds)
-    return render_template("summary_external.html", user=user, compounds=compounds)
+    # export_to_excel(user, compounds)
+    return render_template(template, user=user, compounds=compounds)
 
 
 @main_bp.route("/end")
