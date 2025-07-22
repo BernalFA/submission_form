@@ -82,7 +82,7 @@ def make_input_valid(entry):
 class UserDataForm(FlaskForm):
     username = StringField("Full name", validators=[DataRequired()])
     membership = SelectField(
-        "Affiliation", choices=[("mpi_do", "MPI Dortmund"), ("external", "External")]
+        "Affiliation", choices=[("internal", "MPI Dortmund"), ("external", "External")]
     )
     delivery = SelectField(
         "Compounds delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]

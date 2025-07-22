@@ -13,7 +13,7 @@
             <div class="alert alert-warning d-flex align-items-center justify-content-center" style="height: 46px;" role="alert">
                 <svg class="bi flex-shrink-0 me-2" width="16" height="16" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                 <div>
-                    Submission using a file is incompatible with manually added data. If you want to continue with an existing manual entry, please <a href="{{ url_for('main.upload_external') }}">go back</a>.
+                    Submission using a file is incompatible with manually added data. If you want to continue with an existing manual entry, please <a href="{{ url_for('main.upload', membership='external') }}">go back</a>.
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                                 <span>
                                     Here you can download an Excel sheet template to fill out all the information required for the registration. 
                                 </span>
-                                <a href="{{ url_for('main.download_external') }}" class="btn btn-secondary ms-3">Download Template</a>
+                                <a href="{{ url_for('main.download_template', membership='external') }}" class="btn btn-secondary ms-3">Download Template</a>
                             </div>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
     <div class="row g-3">
         <div class="col-md-3"></div>
         <div class="col-md-6 text-end">
-            <a href="{{ url_for('main.summary_external') }}" class="w-100 btn btn-primary">Next</a>
+            <a href="{{ url_for('main.summary', membership='external') }}" class="w-100 btn btn-primary">Next</a>
         </div>
     </div>
 </div>
