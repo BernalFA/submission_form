@@ -13,3 +13,39 @@ class Config:
         "user": "sqlite:///user.db",
         "compounds_external": "sqlite:///compounds_external.db"
     }
+
+
+# Define fields for database creation
+# Excel name : html/SQL name
+ALLOWED_FIELDS = {
+    "internal": {
+        "Position": "position",
+        "Enso experiment name": "exp_name",
+        "Stereo comment": "stereo_comment",
+        "Product No": "p_num",
+        "Molecular weight": "mw",
+        "Amount (mg)": "amount",
+        "Volume (µl)": "vol",
+        "Conc. (mM)": "conc",
+        "Project name": "project",
+        "Comment": "comment",
+    },
+    "external": {
+        "Position": "position",
+        "Supplier": "supplier",
+        "Supplier ID": "supp_id",
+        "Producer": "producer",
+        "Stereo comment": "stereo_comment",
+        "Molecular weight": "mw",
+        "Amount (mg)": "amount",
+        "Volume (µl)": "vol",
+        "Conc. (mM)": "conc",
+        "Project name": "project",
+        "Trivial name": "trivial_name",
+        "Alternative names": "alt_name",
+        "CAS": "cas",
+        "SMILES": "smiles",
+        "Annotation": "annotation",
+        "Comment": "comment",
+    },
+}

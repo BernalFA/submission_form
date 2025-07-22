@@ -11,10 +11,10 @@ from flask import (
 )
 
 from app.extensions import db
+from app.forms import UserDataForm
 from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
 from app.utils import (
     PositionGenerator,
-    UserDataForm,
     allowed_file,
     # export_to_excel,
     make_input_valid,

@@ -5,33 +5,10 @@ from itertools import product
 
 import openpyxl
 import pandas as pd
-from flask_wtf import FlaskForm
 from rdkit import Chem
 from rdkit.Chem import Draw
-from wtforms import StringField, SelectField, RadioField
-from wtforms.validators import DataRequired
 
-
-ALLOWED_FIELDS = [
-    "exp_name",
-    "stereo_comment",
-    "p_num",
-    "mw",
-    "amount",
-    "vol",
-    "conc",
-    "project",
-    "comment",
-    "position",
-    "supplier",
-    "supp_id",
-    "producer",
-    "trivial_name",
-    "alt_name",
-    "cas",
-    "smiles",
-    "annotation"
-]
+from app.config import ALLOWED_FIELDS
 
 
 class PositionGenerator:
@@ -50,7 +27,6 @@ class PositionGenerator:
 
         plate_pos = []
         for num, letter in product(nums, letters):
-            # print(letter, num)
             if len(str(num)) == 1:
                 plate_pos.append(f"{letter}0{num}")
             else:
@@ -58,11 +34,17 @@ class PositionGenerator:
         return plate_pos
 
 
+def get_allowed_sql_fields():
+    internal_fields = set(ALLOWED_FIELDS["internal"].values())
+    external_fields = set(ALLOWED_FIELDS["external"].values())
+    return internal_fields & external_fields
+
+
 def make_input_valid(entry):
     numeric = ["p_num", "mw", "amount", "vol", "conc"]
     res = {}
     for key, value in entry.items():
-        if key in ALLOWED_FIELDS:
+        if key in get_allowed_sql_fields():
             if key in numeric:
                 if key == "p_num":
                     try:
@@ -79,60 +61,11 @@ def make_input_valid(entry):
     return res
 
 
-class UserDataForm(FlaskForm):
-    username = StringField("Full name", validators=[DataRequired()])
-    membership = SelectField(
-        "Affiliation", choices=[("internal", "MPI Dortmund"), ("external", "External")]
-    )
-    delivery = SelectField(
-        "Compounds delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]
-    )
-    include_structures = RadioField(
-        "Will you share the compounds' structures?",
-        choices=[("true", "Yes"), ("false", "No")],
-        default="true"
-    )
-
-
 ALLOWED_EXTENSIONS = {"xlsx"}
 
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-EXPECTED_HEADERS = {
-    "internal": [
-        "Position",
-        "Enso experiment name",
-        "Stereo comment",
-        "Product No",
-        "Molecular weight",
-        "Amount (mg)",
-        "Volume (µl)",
-        "Conc. (mM)",
-        "Project name",
-        "Comment",
-    ],
-    "external": [
-        "Position",
-        "Supplier",
-        "Supplier ID",
-        "Producer",
-        "Stereo comment",
-        "Molecular weight",
-        "Amount (mg)",
-        "Volume (µl)",
-        "Conc. (mM)",
-        "Project name",
-        "Trivial name",
-        "Alternative names",
-        "CAS",
-        "SMILES",
-        "Annotation",
-        "Comment",
-    ],
-}
 
 
 # created by asking ChatGPT for template validation
@@ -142,7 +75,7 @@ def validate_excel_template(file_bytes, collaborator):
         sheet = wb.active  # or use wb["sheet1"] if specific sheet
         headers = [cell.value for cell in next(sheet.iter_rows(min_row=1, max_row=1))]
 
-        return headers == EXPECTED_HEADERS[collaborator]
+        return headers == list(ALLOWED_FIELDS[collaborator].keys())
 
     except Exception as e:
         print("Excel validation error:", e)
@@ -161,36 +94,15 @@ def smiles_to_png_base64(smiles):
 
 
 def export_to_excel(user, compounds):
-    cols = [
-        "Position",
-        "Enso experiment name",
-        "Stereo comment",
-        "Product No.",
-        "Molecular weight",
-        "Amount (mg)",
-        "Volume (uL)",
-        "Conc. (mM)",
-        "Project name",
-        "Comment",
-    ]
-    order = [
-        "position",
-        "exp_name",
-        "stereo_comment",
-        "p_num",
-        "mw",
-        "amount",
-        "vol",
-        "conc",
-        "project",
-        "comment",
-    ]
+    order = list(ALLOWED_FIELDS[user.membership].values())
+    col_names = list(ALLOWED_FIELDS[user.membership].keys())
+
     cmpd_data = [c.__dict__ for c in compounds]
     for row in cmpd_data:
         row.pop("_sa_instance_state", None)
         row.pop("id", None)
     df = pd.DataFrame(cmpd_data)
     df = df[order]
-    df.columns = cols
+    df.columns = col_names
     filepath = f"/home/freddy/Documents/{user.username}_{user.membership}.xlsx"
     df.to_excel(filepath, index=False)
