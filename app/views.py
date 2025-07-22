@@ -19,10 +19,12 @@ main_bp = Blueprint("main", __name__)
 def index():
     user_form = UserDataForm()
     if user_form.validate_on_submit():
-        entry = UserManager(username=user_form.username.data,
-                            membership=user_form.membership.data,
-                            delivery=user_form.delivery.data,
-                            include_structures=user_form.structures.data == "true")
+        entry = UserManager(
+            username=user_form.username.data,
+            membership=user_form.membership.data,
+            delivery=user_form.delivery.data,
+            include_structures=user_form.include_structures.data == "true"
+        )
         try:
             db.session.add(entry)
             db.session.commit()
