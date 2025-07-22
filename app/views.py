@@ -1,11 +1,26 @@
 import pandas as pd
-from flask import Blueprint, render_template, request, redirect, url_for, send_from_directory, flash, Response
-# from werkzeug.utils import secure_filename
+from flask import (
+    Blueprint,
+    Response,
+    flash,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+)
 
 from app.extensions import db
 from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
-from app.utils import PositionGenerator, make_input_valid, UserDataForm, allowed_file, validate_excel_template, export_to_excel
-from app.utils import smiles_to_png_base64
+from app.utils import (
+    PositionGenerator,
+    UserDataForm,
+    allowed_file,
+    # export_to_excel,
+    make_input_valid,
+    smiles_to_png_base64,
+    validate_excel_template,
+)
 
 
 # define a generator for the plate position
@@ -101,10 +116,6 @@ def upload_internal_from_file():
     if request.method == "POST":
         file = request.files["file"]
 
-        # if "file" not in request.files:
-        #     flash("No file part")
-        #     return redirect(request.url)
-
         if not file or file.filename == "":
             flash("No selected file")
             return redirect(request.url)
@@ -113,7 +124,6 @@ def upload_internal_from_file():
             flash("Invalid file type!")
             return redirect(request.url)
 
-        # filename = secure_filename(file.filename)
         file_bytes = file.read()
         file.seek(0)  # Reset stream pointer after reading
 
@@ -121,11 +131,12 @@ def upload_internal_from_file():
             flash("Uploaded Excel file does not match the expected template!")
             return redirect(request.url)
 
-        # filepath = os.path.join(main_bp.root_path, "uploads", filename)
-        # file.save(filepath)
-        # flash("File uploaded successfully!")
         df = pd.read_excel(file)
-        df.dropna(subset=[col for col in df.columns if col != "Position"], how="all", inplace=True)
+        df.dropna(
+            subset=[col for col in df.columns if col != "Position"],
+            how="all",
+            inplace=True
+        )
 
         for _, row in df.iterrows():
             new_entry = CompoundManagerInternal(
@@ -164,7 +175,6 @@ def upload_external_from_file():
             flash("Invalid file type!")
             return redirect(request.url)
 
-        # filename = secure_filename(file.filename)
         file_bytes = file.read()
         file.seek(0)  # Reset stream pointer after reading
 
@@ -172,11 +182,12 @@ def upload_external_from_file():
             flash("Uploaded Excel file does not match the expected template!")
             return redirect(request.url)
 
-        # filepath = os.path.join(main_bp.root_path, "uploads", filename)
-        # file.save(filepath)
-        # flash("File uploaded successfully!")
         df = pd.read_excel(file)
-        df.dropna(subset=[col for col in df.columns if col != "Position"], how="all", inplace=True)
+        df.dropna(
+            subset=[col for col in df.columns if col != "Position"],
+            how="all",
+            inplace=True
+        )
 
         for _, row in df.iterrows():
             new_entry = CompoundManagerExternal(
