@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="card p-2 p-md-5 border rounded-3 bg-light">
-        <form action="/upload_external" method="POST">
+        <form action="{{ url_for('main.upload', membership='external') }}" method="POST">
             <div class="row g-3">
                 <div class="col-md-2">
                     <label for="position" class="form-label">Position</label>
@@ -167,7 +167,7 @@
     <div class="row g-3">
         <div class="col-md-3"></div>
         <div class="col-md-6 text-end">
-            <a href="{{ url_for('main.summary_external') }}" class="w-100 btn btn-primary">Next</a>
+            <a href="{{ url_for('main.summary', membership='external') }}" class="w-100 btn btn-primary">Next</a>
         </div>
     </div>
 </div>
