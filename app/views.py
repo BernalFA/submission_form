@@ -7,6 +7,7 @@ from flask import (
     render_template,
     request,
     send_from_directory,
+    session,
     url_for,
 )
 
@@ -38,6 +39,7 @@ def index():
     if user_form.validate_on_submit():
         membership = user_form.membership.data
         entry = UserManager(
+            session_id=session["session_id"],
             username=user_form.username.data,
             membership=membership,
             delivery=user_form.delivery.data,
@@ -55,6 +57,7 @@ def index():
 
 @main_bp.route("/upload/<membership>", methods=["GET", "POST"])
 def upload(membership):
+
     if membership == "internal":
         model = CompoundManagerInternal
         template = "upload_internal.html"
@@ -62,11 +65,12 @@ def upload(membership):
         model = CompoundManagerExternal
         template = "upload_external.html"
 
-    compounds = model.query.all()
+    compounds = model.query.filter_by(session_id=session["session_id"]).all()
     if request.method == "POST":
         entry = request.form
         entry = make_input_valid(entry)
         if entry:
+            entry["session_id"] = session["session_id"]
             if membership == "internal":
                 entry["position"] = position_generator.get_position()
             elif membership == "external":
@@ -91,8 +95,8 @@ def summary(membership):
         model = CompoundManagerExternal
         template = "summary_external.html"
 
-    compounds = model.query.all()
-    user = UserManager.query.all()[0]
+    compounds = model.query.filter_by(session_id=session["session_id"]).all()
+    user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
     # export_to_excel(user, compounds)
     return render_template(template, user=user, compounds=compounds)
 
@@ -168,3 +172,21 @@ def mol_png(mol_id):
         return Response("Image not found", status=404)
     html = f'<img src="data:image/png;base64,{cmpd.png}" width="200" height="200">'
     return html
+
+
+@main_bp.route("/reset")
+def reset_session():
+    session_id = session.get("session_id")
+    if session_id:
+        user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
+
+        if user.membership == "internal":
+            model = CompoundManagerInternal
+        elif user.membership == "external":
+            model = CompoundManagerExternal
+
+        UserManager.query.filter_by(session_id=session_id).delete()
+        model.query.filter_by(session_id=session_id).delete()
+        db.session.commit()
+    session.clear()
+    return redirect(url_for("main.end"))
