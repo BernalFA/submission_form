@@ -10,19 +10,67 @@
 
 <div class="container">
     <form method="POST" class="p-4 p-md-5 border rounded-3 bg-light">
-        <div class="mb-3">
+        <div class="row mb-3">
             {{ user_form.hidden_tag() }}
-            {{ user_form.username.label(class="form-label") }}
-            {{ user_form.username(class="form-control placeholder-lightgray", placeholder="Name of the user") }}
+            <div class="col-md-6">
+                {{ user_form.username.label(class="form-label") }}
+                {{ user_form.username(class="form-control placeholder-lightgray", placeholder="Name of the user") }}
+            </div>
+            <div class="col-md-6">
+                {{ user_form.membership.label(class="form-label") }}
+                {{ user_form.membership(class="form-select", id="membership", onchange="toggleRadioField()") }}
+            </div>
         </div>
-        <div class="mb-3">
-            {{ user_form.membership.label(class="form-label") }}
-            {{ user_form.membership(class="form-select") }}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ user_form.delivery.label(class="form-label") }}
+                {{ user_form.delivery(class="form-select") }}
+            </div>
+            <div class="col-md-6" id="include_structures_wrapper" style="display: none;">
+                <label for="{{ user_form.include_structures.id }}">
+                    {{ user_form.include_structures.label(class="form-label") }}
+                    <i class="bi bi-info-circle"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="right"
+                        data-bs-html="true"
+                        title="Mark <strong>Yes</strong> if you provide SMILES strings in the following step."></i>
+                </label>
+                <div class="d-flex">
+                    {% for subfield in user_form.include_structures %}
+                    <div class="form-check me-5">
+                        {{ subfield(class="form-check-input") }}
+                        {{ subfield.label(class="form-check-label") }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
+        <div class="row mb-3"></div>
         <button type="submit" class="btn btn-primary">Start</button>
     </form>
 </div>
 
+<script>
+    // Show or hide the radio field section depending on select value
+    function toggleRadioField() {
+        const select = document.getElementById("membership");
+        const radioDiv = document.getElementById("include_structures_wrapper");
 
+        if (select.value === "external") {
+            radioDiv.style.display = "block";
+
+            // Initialize tooltips in the now-visible radio field
+            const tooltipTriggerList = [].slice.call(radioDiv.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+        } else {
+            radioDiv.style.display = "none";
+        }
+    }
+
+    // Initialize field visibility on page load
+    window.onload = function() {
+        toggleRadioField();
+    }
+</script>
 
 {% endblock %}
