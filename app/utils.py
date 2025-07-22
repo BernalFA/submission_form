@@ -83,7 +83,7 @@ class UserDataForm(FlaskForm):
     delivery = SelectField(
         "Compounds delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]
     )
-    structures = RadioField(
+    include_structures = RadioField(
         "Will you share the compounds' structures?",
         choices=[("true", "Yes"), ("false", "No")],
         default="true"
