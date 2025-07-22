@@ -53,6 +53,8 @@ def upload(membership):
         if entry:
             if membership == "internal":
                 entry["position"] = position_generator.get_position()
+            elif membership == "external":
+                entry["png"] = smiles_to_png_base64(entry["smiles"])
             new_entry = model(**entry)
             try:
                 db.session.add(new_entry)
