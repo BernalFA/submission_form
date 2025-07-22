@@ -19,56 +19,44 @@ main_bp = Blueprint("main", __name__)
 def index():
     user_form = UserDataForm()
     if user_form.validate_on_submit():
+        membership = user_form.membership.data
         entry = UserManager(username=user_form.username.data,
-                            membership=user_form.membership.data)
+                            membership=membership)
         try:
             db.session.add(entry)
             db.session.commit()
-            if user_form.membership.data == "mpi_do":
-                return redirect("/upload_internal")
-            else:
-                return redirect("/upload_external")
+            return redirect(url_for("main.upload", membership=membership))
         except Exception as e:
             print(f"ERROR: {e}")
             return f"ERROR: {e}"
     return render_template("index.html", user_form=user_form)
 
 
-@main_bp.route("/upload_internal", methods=["GET", "POST"])
-def upload_internal():
-    compounds = CompoundManagerInternal.query.all()
+@main_bp.route("/upload/<membership>", methods=["GET", "POST"])
+def upload(membership):
+    if membership == "internal":
+        model = CompoundManagerInternal
+        template = "upload_internal.html"
+    elif membership == "external":
+        model = CompoundManagerExternal
+        template = "upload_external.html"
+
+    compounds = model.query.all()
     if request.method == "POST":
         entry = request.form
         entry = make_input_valid(entry)
         if entry:
-            entry["position"] = position_generator.get_position()
-            new_entry = CompoundManagerInternal(**entry)
+            if membership == "internal":
+                entry["position"] = position_generator.get_position()
+            new_entry = model(**entry)
             try:
                 db.session.add(new_entry)
                 db.session.commit()
-                return redirect(url_for("main.upload_internal"))
+                return redirect(url_for("main.upload", membership=membership))
             except Exception as e:
                 print(f"ERROR: {e}")
                 return f"ERROR: {e}"
-    return render_template("upload_internal.html", compounds=compounds)
-
-
-@main_bp.route("/upload_external", methods=["GET", "POST"])
-def upload_external():
-    compounds = CompoundManagerExternal.query.all()
-    if request.method == "POST":
-        entry = request.form
-        entry = make_input_valid(entry)
-        if entry:
-            new_entry = CompoundManagerExternal(**entry)
-            try:
-                db.session.add(new_entry)
-                db.session.commit()
-                return redirect(url_for("main.upload_external"))
-            except Exception as e:
-                print(f"ERROR: {e}")
-                return f"ERROR: {e}"
-    return render_template("upload_external.html", compounds=compounds)
+    return render_template(template, compounds=compounds)
 
 
 @main_bp.route("/summary_internal")
