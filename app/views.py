@@ -111,9 +111,16 @@ def download_template(membership):
     return send_from_directory("downloads", filename, as_attachment=True)
 
 
-@main_bp.route("/upload_internal_from_file", methods=["GET", "POST"])
-def upload_internal_from_file():
-    compounds = CompoundManagerInternal.query.all()
+@main_bp.route("/upload_from_file/<membership>", methods=["GET", "POST"])
+def upload_from_file(membership):
+    if membership == "internal":
+        model = CompoundManagerInternal
+        template = "upload_internal_from_file.html"
+    elif membership == "external":
+        model = CompoundManagerExternal
+        template = "upload_external_from_file.html"
+
+    compounds = model.query.all()
     if request.method == "POST":
         file = request.files["file"]
 
@@ -128,7 +135,7 @@ def upload_internal_from_file():
         file_bytes = file.read()
         file.seek(0)  # Reset stream pointer after reading
 
-        if not validate_excel_template(file_bytes, "internal"):
+        if not validate_excel_template(file_bytes, membership):
             flash("Uploaded Excel file does not match the expected template!")
             return redirect(request.url)
 
@@ -138,60 +145,20 @@ def upload_internal_from_file():
             how="all",
             inplace=True
         )
-        df = rename_columns(df, "internal")
+        df = rename_columns(df, membership)
+        if membership == "external":
+            df["png"] = df["smiles"].apply(smiles_to_png_base64)
 
         for _, row in df.iterrows():
-            new_entry = CompoundManagerInternal(**row)
+            new_entry = model(**row)
             try:
                 db.session.add(new_entry)
                 db.session.commit()
             except Exception as e:
                 return f"ERROR: {e}"
 
-        return redirect(url_for("main.upload_internal_from_file"))
-    return render_template("upload_internal_from_file.html", compounds=compounds)
-
-
-@main_bp.route("/upload_external_from_file", methods=["GET", "POST"])
-def upload_external_from_file():
-    compounds = CompoundManagerExternal.query.all()
-    if request.method == "POST":
-        file = request.files["file"]
-
-        if not file or file.filename == "":
-            flash("No selected file")
-            return redirect(request.url)
-
-        if not allowed_file(file.filename):
-            flash("Invalid file type!")
-            return redirect(request.url)
-
-        file_bytes = file.read()
-        file.seek(0)  # Reset stream pointer after reading
-
-        if not validate_excel_template(file_bytes, "external"):
-            flash("Uploaded Excel file does not match the expected template!")
-            return redirect(request.url)
-
-        df = pd.read_excel(file)
-        df.dropna(
-            subset=[col for col in df.columns if col != "Position"],
-            how="all",
-            inplace=True
-        )
-        df = rename_columns(df, "external")
-        df["png"] = df["smiles"].apply(smiles_to_png_base64)
-
-        for _, row in df.iterrows():
-            new_entry = CompoundManagerExternal(**row)
-            try:
-                db.session.add(new_entry)
-                db.session.commit()
-            except Exception as e:
-                return f"ERROR: {e}"
-
-        return redirect(url_for("main.upload_external_from_file"))
-    return render_template("upload_external_from_file.html", compounds=compounds)
+        return redirect(url_for("main.upload_from_file", membership=membership))
+    return render_template(template, compounds=compounds)
 
 
 @main_bp.route("/mol_png/<int:mol_id>")
