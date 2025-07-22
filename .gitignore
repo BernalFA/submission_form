@@ -10,5 +10,5 @@ venv/
 .env
 
 # files
-uploads/
-downloads/
+app/exports/
+app/downloads/
