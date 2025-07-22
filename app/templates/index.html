@@ -10,15 +10,35 @@
 
 <div class="container">
     <form method="POST" class="p-4 p-md-5 border rounded-3 bg-light">
-        <div class="mb-3">
+        <div class="row mb-3">
             {{ user_form.hidden_tag() }}
-            {{ user_form.username.label(class="form-label") }}
-            {{ user_form.username(class="form-control placeholder-lightgray", placeholder="Name of the user") }}
+            <div class="col-md-6">
+                {{ user_form.username.label(class="form-label") }}
+                {{ user_form.username(class="form-control placeholder-lightgray", placeholder="Name of the user") }}
+            </div>
+            <div class="col-md-6">
+                {{ user_form.membership.label(class="form-label") }}
+                {{ user_form.membership(class="form-select") }}
+            </div>
         </div>
-        <div class="mb-3">
-            {{ user_form.membership.label(class="form-label") }}
-            {{ user_form.membership(class="form-select") }}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ user_form.delivery.label(class="form-label") }}
+                {{ user_form.delivery(class="form-select") }}
+            </div>
+            <div class="col-md-6">
+                {{ user_form.structures.label(class="form-label") }}
+                <div class="d-flex">
+                    {% for subfield in user_form.structures %}
+                    <div class="form-check me-5">
+                        {{ subfield(class="form-check-input") }}
+                        {{ subfield.label(class="form-check-label") }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
+        <div class="row mb-3"></div>
         <button type="submit" class="btn btn-primary">Start</button>
     </form>
 </div>
