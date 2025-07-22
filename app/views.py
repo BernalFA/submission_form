@@ -18,6 +18,7 @@ from app.utils import (
     allowed_file,
     # export_to_excel,
     make_input_valid,
+    rename_columns,
     smiles_to_png_base64,
     validate_excel_template,
 )
@@ -137,20 +138,10 @@ def upload_internal_from_file():
             how="all",
             inplace=True
         )
+        df = rename_columns(df, "internal")
 
         for _, row in df.iterrows():
-            new_entry = CompoundManagerInternal(
-                position=row["Position"],
-                exp_name=row["Enso experiment name"],
-                stereo_comment=row["Stereo comment"],
-                p_num=row["Product No"],
-                mw=row["Molecular weight"],
-                amount=row["Amount (mg)"],
-                vol=row["Volume (µl)"],
-                conc=row["Conc. (mM)"],
-                project=row["Project name"],
-                comment=row["Comment"],
-            )
+            new_entry = CompoundManagerInternal(**row)
             try:
                 db.session.add(new_entry)
                 db.session.commit()
@@ -188,27 +179,11 @@ def upload_external_from_file():
             how="all",
             inplace=True
         )
+        df = rename_columns(df, "external")
+        df["png"] = df["smiles"].apply(smiles_to_png_base64)
 
         for _, row in df.iterrows():
-            new_entry = CompoundManagerExternal(
-                position=row["Position"],
-                supplier=row["Supplier"],
-                supp_id=row["Supplier ID"],
-                producer=row["Producer"],
-                stereo_comment=row["Stereo comment"],
-                mw=row["Molecular weight"],
-                amount=row["Amount (mg)"],
-                vol=row["Volume (µl)"],
-                conc=row["Conc. (mM)"],
-                project=row["Project name"],
-                trivial_name=row["Trivial name"],
-                alt_name=row["Alternative names"],
-                cas=row["CAS"],
-                smiles=row["SMILES"],
-                annotation=row["Annotation"],
-                comment=row["Comment"],
-                png=smiles_to_png_base64(row["SMILES"])
-            )
+            new_entry = CompoundManagerExternal(**row)
             try:
                 db.session.add(new_entry)
                 db.session.commit()

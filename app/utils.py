@@ -106,3 +106,7 @@ def export_to_excel(user, compounds):
     df.columns = col_names
     filepath = f"/home/freddy/Documents/{user.username}_{user.membership}.xlsx"
     df.to_excel(filepath, index=False)
+
+
+def rename_columns(df, membership):
+    return df.rename(columns=ALLOWED_FIELDS[membership])
