@@ -230,3 +230,21 @@ def mol_png(mol_id):
         return Response("Image not found", status=404)
     html = f'<img src="data:image/png;base64,{cmpd.png}" width="200" height="200">'
     return html
+
+
+@main_bp.route("/reset")
+def reset_session():
+    session_id = session.get("session_id")
+    if session_id:
+        user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
+
+        if user.membership == "internal":
+            model = CompoundManagerInternal
+        elif user.membership == "external":
+            model = CompoundManagerExternal
+
+        UserManager.query.filter_by(session_id=session_id).delete()
+        model.query.filter_by(session_id=session_id).delete()
+        db.session.commit()
+    session.clear()
+    return redirect(url_for("main.end"))
