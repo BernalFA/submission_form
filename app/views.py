@@ -41,6 +41,7 @@ def index():
         entry = UserManager(
             session_id=session["session_id"],
             username=user_form.username.data,
+            email=user_form.email.data,
             membership=membership,
             delivery=user_form.delivery.data,
             include_structures=user_form.include_structures.data == "true"
