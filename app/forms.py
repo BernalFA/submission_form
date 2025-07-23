@@ -10,7 +10,7 @@ class UserDataForm(FlaskForm):
         "Affiliation", choices=[("internal", "MPI Dortmund"), ("external", "External")]
     )
     delivery = SelectField(
-        "Compounds delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]
+        "Samples delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]
     )
     include_structures = RadioField(
         "Will you share the compounds' structures?",

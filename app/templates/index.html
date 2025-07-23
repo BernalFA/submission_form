@@ -17,19 +17,21 @@
                 {{ user_form.username(class="form-control placeholder-lightgray", placeholder="Name of the user") }}
             </div>
             <div class="col-md-6">
-                {{ user_form.email.label(class="form-label") }}
-                {{ user_form.email(class="form-control") }}
+                {{ user_form.membership.label(class="form-label") }}
+                {{ user_form.membership(class="form-select", id="membership", onchange="toggleRadioField()") }}
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-md-6">
-                {{ user_form.membership.label(class="form-label") }}
-                {{ user_form.membership(class="form-select", id="membership", onchange="toggleRadioField()") }}
+            <div class="col-md-6" id="email_wrapper" style="display: none;">
+                {{ user_form.email.label(class="form-label") }}
+                {{ user_form.email(class="form-control") }}
             </div>
             <div class="col-md-6">
                 {{ user_form.delivery.label(class="form-label") }}
                 {{ user_form.delivery(class="form-select") }}
             </div>
+        </div>
+        <div class="row mb-3">
             <div class="col-md-6" id="include_structures_wrapper" style="display: none;">
                 <label for="{{ user_form.include_structures.id }}">
                     {{ user_form.include_structures.label(class="form-label") }}
@@ -59,8 +61,10 @@
     function toggleRadioField() {
         const select = document.getElementById("membership");
         const radioDiv = document.getElementById("include_structures_wrapper");
+        const emailSel = document.getElementById("email_wrapper");
 
         if (select.value === "external") {
+            emailSel.style.display = "block";
             radioDiv.style.display = "block";
 
             // Initialize tooltips in the now-visible radio field
