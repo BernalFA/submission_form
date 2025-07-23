@@ -124,7 +124,7 @@ def upload_from_file(membership):
         model = CompoundManagerExternal
         template = "upload_external_from_file.html"
 
-    compounds = model.query.all()
+    compounds = model.query.filter_by(session_id=session["session_id"]).all()
     if request.method == "POST":
         file = request.files["file"]
 
@@ -150,6 +150,7 @@ def upload_from_file(membership):
             inplace=True
         )
         df = rename_columns(df, membership)
+        df["session_id"] = session["session_id"]
         if membership == "external":
             df["png"] = df["smiles"].apply(smiles_to_png_base64)
 
@@ -158,10 +159,10 @@ def upload_from_file(membership):
             try:
                 db.session.add(new_entry)
                 db.session.commit()
+                return redirect(url_for("main.upload_from_file", membership=membership))
             except Exception as e:
                 return f"ERROR: {e}"
 
-        return redirect(url_for("main.upload_from_file", membership=membership))
     return render_template(template, compounds=compounds)
 
 
