@@ -61,17 +61,19 @@
     function toggleRadioField() {
         const select = document.getElementById("membership");
         const radioDiv = document.getElementById("include_structures_wrapper");
-        const emailSel = document.getElementById("email_wrapper");
+        const emailField = document.getElementById("email_wrapper");
 
         if (select.value === "external") {
-            emailSel.style.display = "block";
+            emailField.style.display = "block";
             radioDiv.style.display = "block";
 
             // Initialize tooltips in the now-visible radio field
             const tooltipTriggerList = [].slice.call(radioDiv.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
         } else {
+            emailField.style.display = "none";
             radioDiv.style.display = "none";
+            document.querySelector('input[name="email"]').value = "";
         }
     }
 
