@@ -13,7 +13,7 @@ from flask import (
 
 from app.extensions import db
 from app.forms import UserDataForm
-from app.models import UserManager, CompoundManagerInternal, CompoundManagerExternal
+from app.models import UserManager, CompoundManager
 from app.utils import (
     PositionGenerator,
     allowed_file,
@@ -57,15 +57,7 @@ def index():
 
 @main_bp.route("/upload/<membership>", methods=["GET", "POST"])
 def upload(membership):
-
-    if membership == "internal":
-        model = CompoundManagerInternal
-        template = "upload_internal.html"
-    elif membership == "external":
-        model = CompoundManagerExternal
-        template = "upload_external.html"
-
-    compounds = model.query.filter_by(session_id=session["session_id"]).all()
+    compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     if request.method == "POST":
         entry = request.form
         entry = make_input_valid(entry)
@@ -75,7 +67,7 @@ def upload(membership):
                 entry["position"] = position_generator.get_position()
             elif membership == "external":
                 entry["png"] = smiles_to_png_base64(entry["smiles"])
-            new_entry = model(**entry)
+            new_entry = CompoundManager(**entry)
             try:
                 db.session.add(new_entry)
                 db.session.commit()
@@ -83,22 +75,15 @@ def upload(membership):
             except Exception as e:
                 print(f"ERROR: {e}")
                 return f"ERROR: {e}"
-    return render_template(template, compounds=compounds)
+    return render_template(f"upload_{membership}.html", compounds=compounds)
 
 
 @main_bp.route("/summary/<membership>")
 def summary(membership):
-    if membership == "internal":
-        model = CompoundManagerInternal
-        template = "summary_internal.html"
-    elif membership == "external":
-        model = CompoundManagerExternal
-        template = "summary_external.html"
-
-    compounds = model.query.filter_by(session_id=session["session_id"]).all()
+    compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
     # export_to_excel(user, compounds)
-    return render_template(template, user=user, compounds=compounds)
+    return render_template(f"summary_{membership}.html", user=user, compounds=compounds)
 
 
 @main_bp.route("/end")
@@ -117,14 +102,7 @@ def download_template(membership):
 
 @main_bp.route("/upload_from_file/<membership>", methods=["GET", "POST"])
 def upload_from_file(membership):
-    if membership == "internal":
-        model = CompoundManagerInternal
-        template = "upload_internal_from_file.html"
-    elif membership == "external":
-        model = CompoundManagerExternal
-        template = "upload_external_from_file.html"
-
-    compounds = model.query.filter_by(session_id=session["session_id"]).all()
+    compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     if request.method == "POST":
         file = request.files["file"]
 
@@ -155,20 +133,20 @@ def upload_from_file(membership):
             df["png"] = df["smiles"].apply(smiles_to_png_base64)
 
         for _, row in df.iterrows():
-            new_entry = model(**row)
+            new_entry = CompoundManager(**row)
             try:
                 db.session.add(new_entry)
                 db.session.commit()
-                return redirect(url_for("main.upload_from_file", membership=membership))
             except Exception as e:
                 return f"ERROR: {e}"
 
-    return render_template(template, compounds=compounds)
+        return redirect(url_for("main.upload_from_file", membership=membership))
+    return render_template(f"upload_{membership}_from_file.html", compounds=compounds)
 
 
 @main_bp.route("/mol_png/<int:mol_id>")
 def mol_png(mol_id):
-    cmpd = CompoundManagerExternal.query.get_or_404(mol_id)
+    cmpd = CompoundManager.query.get_or_404(mol_id)
     if not cmpd.png:
         return Response("Image not found", status=404)
     html = f'<img src="data:image/png;base64,{cmpd.png}" width="200" height="200">'
@@ -179,15 +157,8 @@ def mol_png(mol_id):
 def reset_session():
     session_id = session.get("session_id")
     if session_id:
-        user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
-
-        if user.membership == "internal":
-            model = CompoundManagerInternal
-        elif user.membership == "external":
-            model = CompoundManagerExternal
-
         UserManager.query.filter_by(session_id=session_id).delete()
-        model.query.filter_by(session_id=session_id).delete()
+        CompoundManager.query.filter_by(session_id=session_id).delete()
         db.session.commit()
     session.clear()
     return redirect(url_for("main.end"))
