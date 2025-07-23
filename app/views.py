@@ -93,10 +93,7 @@ def end():
 
 @main_bp.route("/download/<membership>")
 def download_template(membership):
-    if membership == "internal":
-        filename = "INTERNAL_Compound_submission.xlsx"
-    elif membership == "external":
-        filename = "EXTERNAL_collaboration_Compound_submission.xlsx"
+    filename = f"{membership.upper()}_Compound_submission.xlsx"
     return send_from_directory("downloads", filename, as_attachment=True)
 
 
