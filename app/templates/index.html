@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-6">
                 {{ user_form.affiliation.label(class="form-label") }}
-                {{ user_form.affiliation(class="form-select", id="affiliation", onchange="toggleRadioField()") }}
+                {{ user_form.affiliation(class="form-select", id="affiliation", onchange="toggleFields()") }}
             </div>
         </div>
         <div class="row mb-3">
@@ -30,8 +30,27 @@
                 {{ user_form.delivery.label(class="form-label") }}
                 {{ user_form.delivery(class="form-select") }}
             </div>
+
         </div>
         <div class="row mb-3">
+            <div class="col-md-6" id="sample_type_wrapper" style="display: none;">
+                <label for="{{ user_form.sample_type.id }}">
+                    {{ user_form.sample_type.label(class="form-label") }}
+                    <i class="bi bi-info-circle"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="right"
+                        data-bs-html="true"
+                        title="<strong>Mixture</strong> refers to intermediate products of purification processes. If you have a racemic mixture please mark <strong>Isolated compound</strong> instead"></i>
+                </label>
+                <div class="d-flex">
+                    {% for subfield in user_form.sample_type %}
+                    <div class="form-check me-5">
+                        {{ subfield(class="form-check-input", onchange="toggleFields()") }}
+                        {{ subfield.label(class="form-check-label") }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
             <div class="col-md-6" id="include_structures_wrapper" style="display: none;">
                 <label for="{{ user_form.include_structures.id }}">
                     {{ user_form.include_structures.label(class="form-label") }}
@@ -39,7 +58,7 @@
                         data-bs-toggle="tooltip"
                         data-bs-placement="right"
                         data-bs-html="true"
-                        title="Mark <strong>Yes</strong> if you provide SMILES strings in the following step."></i>
+                        title="Mark <strong>Yes</strong> if you provide us with SMILES strings for your samples."></i>
                 </label>
                 <div class="d-flex">
                     {% for subfield in user_form.include_structures %}
@@ -57,22 +76,35 @@
 </div>
 
 <script>
-    // Show or hide the radio field section depending on select value
-    function toggleRadioField() {
-        const select = document.getElementById("affiliation");
-        const radioDiv = document.getElementById("include_structures_wrapper");
+    // Show or hide the radio field section depending on affiliation value
+    function toggleFields() {
+        const affiliationField = document.getElementById("affiliation");
+        const sampleTypeField = document.getElementById("sample_type_wrapper");
+        const structureField = document.getElementById("include_structures_wrapper");
         const emailField = document.getElementById("email_wrapper");
 
-        if (select.value === "external") {
+        if (affiliationField.value === "external") {
             emailField.style.display = "block";
-            radioDiv.style.display = "block";
+            sampleTypeField.style.display = "block";
 
             // Initialize tooltips in the now-visible radio field
-            const tooltipTriggerList = [].slice.call(radioDiv.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+            // const tooltipTriggerList = [].slice.call(sampleTypeField.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const sampleTooltips = sampleTypeField.querySelectorAll('[data-bs-toggle="tooltip"]');
+            sampleTooltips.forEach(el => new bootstrap.Tooltip(el));
+
+            // Check selected option for sample type
+            const selectedType = document.querySelector('input[name="sample_type"]:checked');
+            if (selectedType && selectedType.value === "isolated") {
+                structureField.style.display = "block";
+                // Re-init tooltips structure field
+                const structureTooltips = structureField.querySelectorAll('[data-bs-toggle="tooltip"]');
+                structureTooltips.forEach(el => new bootstrap.Tooltip(el));
+            } else {
+                structureField.style.display = "none";
+            }
         } else {
             emailField.style.display = "none";
-            radioDiv.style.display = "none";
+            sampleTypeField.style.display = "none";
             document.querySelector('input[name="email"]').value = "";
         }
     }
