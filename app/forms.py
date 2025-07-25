@@ -9,6 +9,10 @@ class UserDataForm(FlaskForm):
     affiliation = SelectField(
         "Affiliation", choices=[("internal", "MPI Dortmund"), ("external", "External")]
     )
+    sample_type = RadioField(
+        "Sample type",
+        choices=[("isolated", "Isolated compound"), ("mixture", "Mixture (e.g. extracts, fractions)")],
+    )
     delivery = SelectField(
         "Samples delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]
     )
