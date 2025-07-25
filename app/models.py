@@ -43,6 +43,6 @@ class UserManager(db.Model):
     session_id = db.Column(db.String(100))
     username = db.Column(db.String)
     email = db.Column(db.String, unique=True)
-    membership = db.Column(db.String)
+    affiliation = db.Column(db.String)
     delivery = db.Column(db.String)
     include_structures = db.Column(db.Boolean)

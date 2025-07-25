@@ -94,8 +94,8 @@ def smiles_to_png_base64(smiles):
 
 
 def export_to_excel(user, compounds):
-    order = list(ALLOWED_FIELDS[user.membership].values())
-    col_names = list(ALLOWED_FIELDS[user.membership].keys())
+    order = list(ALLOWED_FIELDS[user.affiliation].values())
+    col_names = list(ALLOWED_FIELDS[user.affiliation].keys())
 
     cmpd_data = [c.__dict__ for c in compounds]
     for row in cmpd_data:
@@ -104,9 +104,9 @@ def export_to_excel(user, compounds):
     df = pd.DataFrame(cmpd_data)
     df = df[order]
     df.columns = col_names
-    filepath = f"/home/freddy/Documents/{user.username}_{user.membership}.xlsx"
+    filepath = f"/home/freddy/Documents/{user.username}_{user.affiliation}.xlsx"
     df.to_excel(filepath, index=False)
 
 
-def rename_columns(df, membership):
-    return df.rename(columns=ALLOWED_FIELDS[membership])
+def rename_columns(df, affiliation):
+    return df.rename(columns=ALLOWED_FIELDS[affiliation])

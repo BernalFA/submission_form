@@ -37,54 +37,54 @@ main_bp = Blueprint("main", __name__)
 def index():
     user_form = UserDataForm()
     if user_form.validate_on_submit():
-        membership = user_form.membership.data
+        affiliation = user_form.affiliation.data
         entry = UserManager(
             session_id=session["session_id"],
             username=user_form.username.data,
             email=user_form.email.data,
-            membership=membership,
+            affiliation=affiliation,
             delivery=user_form.delivery.data,
             include_structures=user_form.include_structures.data == "true"
         )
         try:
             db.session.add(entry)
             db.session.commit()
-            return redirect(url_for("main.upload", membership=membership))
+            return redirect(url_for("main.upload", affiliation=affiliation))
         except Exception as e:
             print(f"ERROR: {e}")
             return f"ERROR: {e}"
     return render_template("index.html", user_form=user_form)
 
 
-@main_bp.route("/upload/<membership>", methods=["GET", "POST"])
-def upload(membership):
+@main_bp.route("/upload/<affiliation>", methods=["GET", "POST"])
+def upload(affiliation):
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     if request.method == "POST":
         entry = request.form
         entry = make_input_valid(entry)
         if entry:
             entry["session_id"] = session["session_id"]
-            if membership == "internal":
+            if affiliation == "internal":
                 entry["position"] = position_generator.get_position()
-            elif membership == "external":
+            elif affiliation == "external":
                 entry["png"] = smiles_to_png_base64(entry["smiles"])
             new_entry = CompoundManager(**entry)
             try:
                 db.session.add(new_entry)
                 db.session.commit()
-                return redirect(url_for("main.upload", membership=membership))
+                return redirect(url_for("main.upload", affiliation=affiliation))
             except Exception as e:
                 print(f"ERROR: {e}")
                 return f"ERROR: {e}"
-    return render_template(f"upload_{membership}.html", compounds=compounds)
+    return render_template(f"upload_{affiliation}.html", compounds=compounds)
 
 
-@main_bp.route("/summary/<membership>")
-def summary(membership):
+@main_bp.route("/summary/<affiliation>")
+def summary(affiliation):
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
     # export_to_excel(user, compounds)
-    return render_template(f"summary_{membership}.html", user=user, compounds=compounds)
+    return render_template(f"summary_{affiliation}.html", user=user, compounds=compounds)
 
 
 @main_bp.route("/end")
@@ -92,14 +92,14 @@ def end():
     return render_template("end.html")
 
 
-@main_bp.route("/download/<membership>")
-def download_template(membership):
-    filename = f"{membership.upper()}_Compound_submission.xlsx"
+@main_bp.route("/download/<affiliation>")
+def download_template(affiliation):
+    filename = f"{affiliation.upper()}_Compound_submission.xlsx"
     return send_from_directory("downloads", filename, as_attachment=True)
 
 
-@main_bp.route("/upload_from_file/<membership>", methods=["GET", "POST"])
-def upload_from_file(membership):
+@main_bp.route("/upload_from_file/<affiliation>", methods=["GET", "POST"])
+def upload_from_file(affiliation):
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     if request.method == "POST":
         file = request.files["file"]
@@ -115,7 +115,7 @@ def upload_from_file(membership):
         file_bytes = file.read()
         file.seek(0)  # Reset stream pointer after reading
 
-        if not validate_excel_template(file_bytes, membership):
+        if not validate_excel_template(file_bytes, affiliation):
             flash("Uploaded Excel file does not match the expected template!")
             return redirect(request.url)
 
@@ -125,9 +125,9 @@ def upload_from_file(membership):
             how="all",
             inplace=True
         )
-        df = rename_columns(df, membership)
+        df = rename_columns(df, affiliation)
         df["session_id"] = session["session_id"]
-        if membership == "external":
+        if affiliation == "external":
             df["png"] = df["smiles"].apply(smiles_to_png_base64)
 
         for _, row in df.iterrows():
@@ -138,8 +138,8 @@ def upload_from_file(membership):
             except Exception as e:
                 return f"ERROR: {e}"
 
-        return redirect(url_for("main.upload_from_file", membership=membership))
-    return render_template(f"upload_{membership}_from_file.html", compounds=compounds)
+        return redirect(url_for("main.upload_from_file", affiliation=affiliation))
+    return render_template(f"upload_{affiliation}_from_file.html", compounds=compounds)
 
 
 @main_bp.route("/mol_png/<int:mol_id>")

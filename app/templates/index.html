@@ -17,8 +17,8 @@
                 {{ user_form.username(class="form-control placeholder-lightgray", placeholder="Name of the user") }}
             </div>
             <div class="col-md-6">
-                {{ user_form.membership.label(class="form-label") }}
-                {{ user_form.membership(class="form-select", id="membership", onchange="toggleRadioField()") }}
+                {{ user_form.affiliation.label(class="form-label") }}
+                {{ user_form.affiliation(class="form-select", id="affiliation", onchange="toggleRadioField()") }}
             </div>
         </div>
         <div class="row mb-3">
@@ -59,7 +59,7 @@
 <script>
     // Show or hide the radio field section depending on select value
     function toggleRadioField() {
-        const select = document.getElementById("membership");
+        const select = document.getElementById("affiliation");
         const radioDiv = document.getElementById("include_structures_wrapper");
         const emailField = document.getElementById("email_wrapper");
 

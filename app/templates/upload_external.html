@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="card p-2 p-md-5 border rounded-3 bg-light">
-        <form action="{{ url_for('main.upload', membership='external') }}" method="POST">
+        <form action="{{ url_for('main.upload', affiliation='external') }}" method="POST">
             <div class="row g-3">
                 <div class="col-md-2">
                     <label for="position" class="form-label">Position</label>
@@ -140,7 +140,7 @@
 <div class="container">
     <div class="d-flex justify-content-between">
         <p class="text-secondary">
-            * In case of a large number of compounds, you can upload an Excel sheet <a href="{{ url_for('main.upload_from_file', membership='external') }}">here</a> with all the required information.
+            * In case of a large number of compounds, you can upload an Excel sheet <a href="{{ url_for('main.upload_from_file', affiliation='external') }}">here</a> with all the required information.
         </p>
     </div>
 </div>
@@ -167,7 +167,7 @@
     <div class="row g-3">
         <div class="col-md-3"></div>
         <div class="col-md-6 text-end">
-            <a href="{{ url_for('main.summary', membership='external') }}" class="w-100 btn btn-primary">Next</a>
+            <a href="{{ url_for('main.summary', affiliation='external') }}" class="w-100 btn btn-primary">Next</a>
         </div>
     </div>
 </div>

@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Optional
 class UserDataForm(FlaskForm):
     username = StringField("Full name", validators=[DataRequired()])
     email = EmailField("Email", validators=[Optional()])
-    membership = SelectField(
+    affiliation = SelectField(
         "Affiliation", choices=[("internal", "MPI Dortmund"), ("external", "External")]
     )
     delivery = SelectField(
