@@ -56,10 +56,12 @@
                     <label for="mw" class="form-label">Molecular Weight</label>
                     <input type="float" class="form-control placeholder-lightgray" id="mw" name="mw" placeholder="418">
                 </div>
+                {% if delivery == "vials_solid" %}
                 <div class="col-md-2">
                     <label for="amount" class="form-label">Amount (mg)</label>
                     <input type="text" class="form-control placeholder-lightgray" id="amount" name="amount" placeholder="2.1" required>
                 </div>
+                {% else %}
                 <div class="col-md-2">
                     <label for="vol" class="form-label">Volume (&mu;L)</label>
                     <input type="int" class="form-control placeholder-lightgray" id="vol" name="vol" placeholder="502" required>
@@ -68,6 +70,7 @@
                     <label for="conc" class="form-label">Concentration (mM)</label>
                     <input type="float" class="form-control placeholder-lightgray" id="conc" name="conc" placeholder="10" required>
                 </div>
+                {% endif %}
                 <div class="col-md-6">
                     <label for="project" class="form-label">Project Name</label>
                     <input type="text" class="form-control placeholder-lightgray" id="project" name="project" placeholder="Bicyclomycin" required>
