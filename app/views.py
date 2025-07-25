@@ -63,6 +63,8 @@ def index():
 @main_bp.route("/upload/<affiliation>", methods=["GET", "POST"])
 def upload(affiliation):
     delivery = session["delivery"]
+    sample_type = session["sample_type"]
+    include_structures = session["include_structures"]
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     if request.method == "POST":
         entry = request.form
@@ -81,7 +83,13 @@ def upload(affiliation):
             except Exception as e:
                 print(f"ERROR: {e}")
                 return f"ERROR: {e}"
-    return render_template(f"upload_{affiliation}.html", compounds=compounds, delivery=delivery)
+    if delivery == "vials_solid" and affiliation == "external":
+        template = "upload_external_dry.html"
+    elif affiliation == "internal":
+        template = "upload_internal.html"
+    else:
+        template = "upload_external_solution.html"
+    return render_template(template, compounds=compounds, delivery=delivery, sample_type=sample_type, include_structures=include_structures)
 
 
 @main_bp.route("/summary/<affiliation>")
