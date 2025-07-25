@@ -37,6 +37,10 @@ main_bp = Blueprint("main", __name__)
 def index():
     user_form = UserDataForm()
     if user_form.validate_on_submit():
+        session["delivery"] = user_form.delivery.data
+        session["sample_type"] = user_form.sample_type.data
+        session["include_structures"] = user_form.include_structures.data
+
         affiliation = user_form.affiliation.data
         entry = UserManager(
             session_id=session["session_id"],
@@ -58,6 +62,7 @@ def index():
 
 @main_bp.route("/upload/<affiliation>", methods=["GET", "POST"])
 def upload(affiliation):
+    delivery = session["delivery"]
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     if request.method == "POST":
         entry = request.form
@@ -76,7 +81,7 @@ def upload(affiliation):
             except Exception as e:
                 print(f"ERROR: {e}")
                 return f"ERROR: {e}"
-    return render_template(f"upload_{affiliation}.html", compounds=compounds)
+    return render_template(f"upload_{affiliation}.html", compounds=compounds, delivery=delivery)
 
 
 @main_bp.route("/summary/<affiliation>")

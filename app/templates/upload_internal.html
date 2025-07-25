@@ -37,22 +37,26 @@
                     </label>
                     <input type="int" class="form-control placeholder-lightgray" id="p_num" name="p_num" placeholder="2">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="mw" class="form-label">Molecular Weight</label>
                     <input type="float" class="form-control placeholder-lightgray" id="mw" name="mw" placeholder="418">
                 </div>
-                <div class="col-md-3">
+                {% if delivery == "vials_solid" %}
+                <div class="col-md-2">
                     <label for="amount" class="form-label">Amount (mg)</label>
                     <input type="text" class="form-control placeholder-lightgray" id="amount" name="amount" placeholder="2.1" required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2"></div>
+                {% else %}
+                <div class="col-md-2">
                     <label for="vol" class="form-label">Volume (&mu;L)</label>
                     <input type="int" class="form-control placeholder-lightgray" id="vol" name="vol" placeholder="502" required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="conc" class="form-label">Concentration (mM)</label>
                     <input type="float" class="form-control placeholder-lightgray" id="conc" name="conc" placeholder="10" required>
                 </div>
+                {% endif %}
                 <div class="col-md-6">
                     <label for="project" class="form-label">Project Name</label>
                     <input type="text" class="form-control placeholder-lightgray" id="project" name="project" placeholder="Bicyclomycin" required>
@@ -105,7 +109,7 @@
 <div class="container">
     <div class="d-flex justify-content-between">
         <p class="text-secondary">
-            * In case of a large number of compounds, you can upload an Excel sheet <a href="{{ url_for('main.upload_from_file', affiliation='internal') }}">here</a> with all the required information.
+            * In case of a large number of compounds (> 100), you can upload an Excel sheet <a href="{{ url_for('main.upload_from_file', affiliation='internal') }}">here</a> with all the required information.
         </p>
     </div>
 </div>
