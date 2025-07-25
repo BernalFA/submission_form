@@ -17,7 +17,12 @@ class UserDataForm(FlaskForm):
         ],
     )
     delivery = SelectField(
-        "Samples delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]
+        "Samples delivered in",
+        choices=[
+            ("vials_solid", "Vials (solids)"),
+            ("vials_solution", "Vials (DMSO solution)"),
+            ("plate", "Plate"),
+        ]
     )
     include_structures = BooleanField(
         "Will you share the compounds' structures?",
