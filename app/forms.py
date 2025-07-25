@@ -11,7 +11,10 @@ class UserDataForm(FlaskForm):
     )
     sample_type = RadioField(
         "Sample type",
-        choices=[("isolated", "Isolated compound"), ("mixture", "Mixture (e.g. extracts, fractions)")],
+        choices=[
+            ("isolated", "Isolated compound"),
+            ("mixture", "Mixture (e.g. extracts, fractions)")
+        ],
     )
     delivery = SelectField(
         "Samples delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]
