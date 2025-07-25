@@ -11,7 +11,7 @@
 <div class="container">
     <form method="POST" class="p-4 p-md-5 border rounded-3 bg-light">
         <div class="row">
-            <div class="col-md-8 pe-md-5">
+            <div class="col-md-7 pe-md-5">
                 <h5 class="mb-3">User Information</h5>
 
                 {{ user_form.hidden_tag() }}
@@ -31,7 +31,7 @@
                 </div>
 
             </div>
-            <div class="col-md-4 ps-md-5 divider">
+            <div class="col-md-5 ps-md-5 divider">
                 <h5 class="mb-3">General information</h5>
 
                 <div class="mb-3">
@@ -51,21 +51,15 @@
                     {{ user_form.sample_type(class="form-select", onchange="toggleFields()") }}
                 </div>
                 <div class="mb-3" id="include_structures_wrapper" style="display: none;">
-                    <label for="{{ user_form.include_structures.id }}">
-                        {{ user_form.include_structures.label(class="form-label") }}
+                    {{ user_form.include_structures(class="form-check-input") }}
+                    <label for="{{ user_form.include_structures.text }}">
+                        {{ user_form.include_structures.label(class="form-check-label") }}
                         <i class="bi bi-question-circle"
                             data-bs-toggle="tooltip"
                             data-bs-placement="right"
                             data-bs-html="true"
                             title="Mark <strong>Yes</strong> if you provide us with SMILES strings for your samples."></i>
                     </label>
-                    <div class="d-flex">
-                        {% for subfield in user_form.include_structures %}
-                        <div class="form-check me-5">
-                            {{ subfield(class="form-check-input") }}
-                            {{ subfield.label(class="form-check-label") }}
-                        </div>
-                        {% endfor %}
                     </div>
                 </div>
             </div>

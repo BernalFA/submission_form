@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, RadioField, EmailField
+from wtforms import StringField, SelectField, BooleanField, EmailField
 from wtforms.validators import DataRequired, Optional
 
 
@@ -19,8 +19,7 @@ class UserDataForm(FlaskForm):
     delivery = SelectField(
         "Samples delivered in", choices=[("vials", "Vials"), ("plate", "Plate")]
     )
-    include_structures = RadioField(
+    include_structures = BooleanField(
         "Will you share the compounds' structures?",
-        choices=[("true", "Yes"), ("false", "No")],
-        default="true"
+        default="checked"
     )
