@@ -97,6 +97,7 @@
                 structureTooltips.forEach(el => new bootstrap.Tooltip(el));
             } else {
                 structureField.style.display = "none";
+                document.querySelector('input[name="include_structures"]').value = "false";
             }
         } else {
             emailField.style.display = "none";
