@@ -9,7 +9,7 @@ class UserDataForm(FlaskForm):
     affiliation = SelectField(
         "Affiliation", choices=[("internal", "MPI Dortmund"), ("external", "External")]
     )
-    sample_type = RadioField(
+    sample_type = SelectField(
         "Sample type",
         choices=[
             ("isolated", "Isolated compound"),

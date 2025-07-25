@@ -10,68 +10,69 @@
 
 <div class="container">
     <form method="POST" class="p-4 p-md-5 border rounded-3 bg-light">
-        <div class="row mb-3">
-            {{ user_form.hidden_tag() }}
-            <div class="col-md-6">
-                {{ user_form.username.label(class="form-label") }}
-                {{ user_form.username(class="form-control placeholder-lightgray", placeholder="Name of the user") }}
-            </div>
-            <div class="col-md-6">
-                {{ user_form.affiliation.label(class="form-label") }}
-                {{ user_form.affiliation(class="form-select", id="affiliation", onchange="toggleFields()") }}
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6" id="email_wrapper" style="display: none;">
-                {{ user_form.email.label(class="form-label") }}
-                {{ user_form.email(class="form-control") }}
-            </div>
-            <div class="col-md-6">
-                {{ user_form.delivery.label(class="form-label") }}
-                {{ user_form.delivery(class="form-select") }}
-            </div>
+        <div class="row">
+            <div class="col-md-8 pe-md-5">
+                <h5 class="mb-3">User Information</h5>
 
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6" id="sample_type_wrapper" style="display: none;">
-                <label for="{{ user_form.sample_type.id }}">
-                    {{ user_form.sample_type.label(class="form-label") }}
-                    <i class="bi bi-question-circle"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="right"
-                        data-bs-html="true"
-                        title="<strong>Mixture</strong> refers to intermediate products of purification processes. If you have a racemic mixture please mark <strong>Isolated compound</strong> instead"></i>
-                </label>
-                <div class="d-flex">
-                    {% for subfield in user_form.sample_type %}
-                    <div class="form-check me-5">
-                        {{ subfield(class="form-check-input", onchange="toggleFields()") }}
-                        {{ subfield.label(class="form-check-label") }}
+                {{ user_form.hidden_tag() }}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ user_form.username.label(class="form-label") }}
+                        {{ user_form.username(class="form-control placeholder-lightgray", placeholder="Name of the user") }}
                     </div>
-                    {% endfor %}
+                    <div class="col-md-6 mb-3">
+                        {{ user_form.affiliation.label(class="form-label") }}
+                        {{ user_form.affiliation(class="form-select", id="affiliation", onchange="toggleFields()") }}
+                    </div>
+                </div>
+                <div class="mb-3" id="email_wrapper" style="display: none;">
+                    {{ user_form.email.label(class="form-label") }}
+                    {{ user_form.email(class="form-control") }}
+                </div>
+
+            </div>
+            <div class="col-md-4 ps-md-5 divider">
+                <h5 class="mb-3">General information</h5>
+
+                <div class="mb-3">
+                    {{ user_form.delivery.label(class="form-label") }}
+                    {{ user_form.delivery(class="form-select") }}
+                </div>
+
+                <div class="mb-3" id="sample_type_wrapper" style="display: none;">
+                    <label for="{{ user_form.sample_type.id }}">
+                        {{ user_form.sample_type.label(class="form-label") }}
+                        <i class="bi bi-question-circle"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="right"
+                            data-bs-html="true"
+                            title="<strong>Mixture</strong> refers to intermediate products of purification processes. If you have a racemic mixture please mark <strong>Isolated compound</strong> instead"></i>
+                    </label>
+                    {{ user_form.sample_type(class="form-select", onchange="toggleFields()") }}
+                </div>
+                <div class="mb-3" id="include_structures_wrapper" style="display: none;">
+                    <label for="{{ user_form.include_structures.id }}">
+                        {{ user_form.include_structures.label(class="form-label") }}
+                        <i class="bi bi-question-circle"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="right"
+                            data-bs-html="true"
+                            title="Mark <strong>Yes</strong> if you provide us with SMILES strings for your samples."></i>
+                    </label>
+                    <div class="d-flex">
+                        {% for subfield in user_form.include_structures %}
+                        <div class="form-check me-5">
+                            {{ subfield(class="form-check-input") }}
+                            {{ subfield.label(class="form-check-label") }}
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6" id="include_structures_wrapper" style="display: none;">
-                <label for="{{ user_form.include_structures.id }}">
-                    {{ user_form.include_structures.label(class="form-label") }}
-                    <i class="bi bi-question-circle"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="right"
-                        data-bs-html="true"
-                        title="Mark <strong>Yes</strong> if you provide us with SMILES strings for your samples."></i>
-                </label>
-                <div class="d-flex">
-                    {% for subfield in user_form.include_structures %}
-                    <div class="form-check me-5">
-                        {{ subfield(class="form-check-input") }}
-                        {{ subfield.label(class="form-check-label") }}
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
         </div>
-        <div class="row mb-3"></div>
-        <button type="submit" class="btn btn-primary">Start</button>
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-primary">Start</button>
+        </div>
     </form>
 </div>
 
@@ -93,7 +94,7 @@
             sampleTooltips.forEach(el => new bootstrap.Tooltip(el));
 
             // Check selected option for sample type
-            const selectedType = document.querySelector('input[name="sample_type"]:checked');
+            const selectedType = document.getElementById("sample_type");
             if (selectedType && selectedType.value === "isolated") {
                 structureField.style.display = "block";
                 // Re-init tooltips structure field
@@ -111,7 +112,7 @@
 
     // Initialize field visibility on page load
     window.onload = function() {
-        toggleRadioField();
+        toggleFields();
     }
 </script>
 
