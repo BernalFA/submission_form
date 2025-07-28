@@ -15,10 +15,93 @@
 
 <br/>
 
-{% block form %}{% endblock %}
+<div class="container">
+    <div class="card p-2 p-md-5 border rounded-3 bg-light">
+        <form action="{{ url_for('main.upload', affiliation='external', delivery=delivery) }}" method="POST">
+            <div class="row g-3">
+
+                {% block fields %}{% endblock %}
+
+                <div class="col-md-12">
+                    <label for="comment" class="form-label">
+                        Comment
+                        <i class="bi bi-question-circle"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="right" 
+                            title="Enter additional information here, e.g., enantiomeric purity (98% ee) in case of chiral compounds"></i>
+                    </label>
+                    <input type="text" class="form-control" id="comment" name="comment">
+                </div>
+            </div>
+
+            <br/>
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <button type="submit" class="btn btn-secondary">Add</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<br>
+
+{% if compounds | length > 0 %}
+<div class="container">
+    <div class="row g-3">
+        <div class="col-md-9"></div>
+        <div class="col-md-3 text-end">
+            {% if compounds | length == 1 %}
+            <div class="alert alert-success text-center" role="alert">
+            You have added {{ compounds | length }} compound
+            </div>
+            {% else %}
+            <div class="alert alert-success" role="alert">
+            You have added {{ compounds | length }} compounds
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% else %}
+<br/>
+
+<div class="container">
+    <div class="d-flex justify-content-between">
+        <p class="text-secondary">
+            * In case of a large number of compounds (>100), you can upload an Excel sheet <a href="{{ url_for('main.upload_from_file', affiliation=affiliation) }}">here</a> with all the required information.
+        </p>
+    </div>
+</div>
+{% endif %}
+
+<script>
+  // Enable tooltips
+  document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+      new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+</script>
+
+{% endblock %}
 
 
-{% block submit %}{% endblock %}
+{% block submit %}
+
+<hr>
+
+<div class="container">
+    <div class="row g-3">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-end">
+            <a href="{{ url_for('main.summary', affiliation=affiliation) }}" class="w-100 btn btn-primary">Next</a>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}
