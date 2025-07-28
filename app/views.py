@@ -37,7 +37,8 @@ main_bp = Blueprint("main", __name__)
 def index():
     user_form = UserDataForm()
     if user_form.validate_on_submit():
-        session["delivery"] = user_form.delivery.data
+        delivery = user_form.delivery.data
+        session["delivery"] = delivery
         session["sample_type"] = user_form.sample_type.data
         session["include_structures"] = user_form.include_structures.data
 
@@ -53,16 +54,15 @@ def index():
         try:
             db.session.add(entry)
             db.session.commit()
-            return redirect(url_for("main.upload", affiliation=affiliation))
+            return redirect(url_for("main.upload", affiliation=affiliation, delivery=delivery))
         except Exception as e:
             print(f"ERROR: {e}")
             return f"ERROR: {e}"
     return render_template("index.html", user_form=user_form)
 
 
-@main_bp.route("/upload/<affiliation>", methods=["GET", "POST"])
-def upload(affiliation):
-    delivery = session["delivery"]
+@main_bp.route("/upload/<string:affiliation>/<string:delivery>", methods=["GET", "POST"])
+def upload(affiliation, delivery):
     sample_type = session["sample_type"]
     include_structures = session["include_structures"]
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
@@ -79,17 +79,30 @@ def upload(affiliation):
             try:
                 db.session.add(new_entry)
                 db.session.commit()
-                return redirect(url_for("main.upload", affiliation=affiliation))
+                return redirect(url_for("main.upload", affiliation=affiliation, delivery=delivery))
             except Exception as e:
                 print(f"ERROR: {e}")
                 return f"ERROR: {e}"
-    if delivery == "vials_solid" and affiliation == "external":
-        template = "upload_external_dry.html"
-    elif affiliation == "internal":
-        template = "upload_internal.html"
+    if affiliation == "external":
+        if delivery == "vials_solid":
+            template = "upload_external_no_solvent.html"
+        elif delivery == "vials_solution":
+            template = "upload_external_solution_vial.html"
+        elif delivery == "plate":
+            template = "upload_external_solution_plate.html"
+        kwargs = {
+            "compounds": compounds,
+            "sample_type": sample_type,
+            "include_structures": include_structures
+        }
     else:
-        template = "upload_external_solution.html"
-    return render_template(template, compounds=compounds, delivery=delivery, sample_type=sample_type, include_structures=include_structures)
+        template = "upload_internal.html"
+        kwargs = {
+            "compounds": compounds,
+            "delivery": delivery,
+        }
+
+    return render_template(template, **kwargs)
 
 
 @main_bp.route("/summary/<affiliation>")

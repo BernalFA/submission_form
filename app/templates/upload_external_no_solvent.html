@@ -2,21 +2,19 @@
 
 {% block fields %}
 
-<div class="col-md-6">
+<div class="col-md-8">
     <label for="project" class="form-label">Project Name</label>
     <input type="text" class="form-control placeholder-lightgray" id="project" name="project" placeholder="Bicyclomycin" required>
 </div>
-<div class="col-md-4"></div>
 <div class="col-md-4">
-    <label for="supplier" class="form-label">
-        Supplier
+    <label for="producer" class="form-label">
+        Producer
         <i class="bi bi-question-circle"
             data-bs-toggle="tooltip" 
             data-bs-placement="right" 
-            title="Name of company where the compound was purchased. 
-            If synthezised in your lab, please leave it blank"></i>
+            title="Name of the person submitting the compound."></i>
     </label>
-    <input type="text" class="form-control placeholder-lightgray" id="supplier" name="supplier" placeholder="Intervet">
+    <input type="text" class="form-control" id="producer" name="producer">
 </div>
 <div class="col-md-3">
     <label for="supp_id" class="form-label">
@@ -28,15 +26,16 @@
     </label>
     <input type="text" class="form-control placeholder-lightgray" id="supp_id" name="supp_id" placeholder="BM-600B">
 </div>
-<div class="col-md-3">
-    <label for="producer" class="form-label">
-        Producer
+<div class="col-md-4">
+    <label for="supplier" class="form-label">
+        Supplier
         <i class="bi bi-question-circle"
             data-bs-toggle="tooltip" 
             data-bs-placement="right" 
-            title="Name of the person submitting the compound."></i>
+            title="Name of company where the compound was purchased. 
+            If synthezised in your lab, please leave it blank"></i>
     </label>
-    <input type="text" class="form-control" id="producer" name="producer">
+    <input type="text" class="form-control placeholder-lightgray" id="supplier" name="supplier" placeholder="Intervet">
 </div>
 <div class="col-md-2">
     <label for="amount" class="form-label">Amount (mg)</label>
@@ -44,7 +43,11 @@
 </div>
 {% if sample_type == "isolated" %}
     {% if include_structures %}
-        <div class="col-md-7">
+        <div class="col-md-3">
+            <label for="cas" class="form-label">CAS Number</label>
+            <input type="text" class="form-control placeholder-lightgray" id="cas" name="cas" placeholder="38129-37-2">
+        </div>
+        <div class="col-md-9">
             <label for="smiles" class="form-label">SMILES string</label>
             <input type="text" class="form-control placeholder-lightgray" id="smiles" name="smiles" placeholder="C[C@](CO)([C@@H]([C@@]12C(=O)N[C@@](C(=C)CCO1)(C(=O)N2)O)O)O" required>
         </div>
@@ -59,10 +62,6 @@
                 <option>Mixture</option>
             </select>
         </div>
-        <div class="col-md-2">
-            <label for="cas" class="form-label">CAS Number</label>
-            <input type="text" class="form-control placeholder-lightgray" id="cas" name="cas" placeholder="38129-37-2">
-        </div>
         <div class="col-md-3">
             <label for="trivial_name" class="form-label">Trivial name</label>
             <input type="text" class="form-control placeholder-lightgray" id="trivial_name" name="trivial_name" placeholder="Bicozamycin">
@@ -71,12 +70,12 @@
             <label for="alt_name" class="form-label">Alternative Name</label>
             <input type="text" class="form-control placeholder-lightgray" id="alt_name" name="alt_name" placeholder="Aizumycin">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <label for="annotation" class="form-label">Annotation</label>
             <input type="text" class="form-control" id="annotation" name="annotation">
         </div>
     {% else %}
-        <div class="col-md-2">
+        <div class="col-md-3">
             <label for="mw" class="form-label">Molecular Weight</label>
             <input type="float" class="form-control placeholder-lightgray" id="mw" name="mw" placeholder="418">
         </div>
