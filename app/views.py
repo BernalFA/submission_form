@@ -71,9 +71,9 @@ def upload(affiliation, delivery):
         entry = make_input_valid(entry)
         if entry:
             entry["session_id"] = session["session_id"]
-            if affiliation == "internal":
+            if delivery in ["vials_solid", "vials_solution"]:
                 entry["position"] = position_generator.get_position()
-            elif affiliation == "external":
+            elif delivery == "plate":
                 entry["png"] = smiles_to_png_base64(entry["smiles"])
             new_entry = CompoundManager(**entry)
             try:
