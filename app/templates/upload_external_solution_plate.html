@@ -1,0 +1,93 @@
+{% extends 'upload.html' %}
+
+{% block fields %}
+
+<div class="col-md-1">
+    <label for="position" class="form-label">Position</label>
+    <input type="text" class="form-control placeholder-lightgray" id="position" name="position" placeholder="A01" required>
+</div>
+<div class="col-md-7">
+    <label for="project" class="form-label">Project Name</label>
+    <input type="text" class="form-control placeholder-lightgray" id="project" name="project" placeholder="Bicyclomycin" required>
+</div>
+<div class="col-md-4">
+    <label for="producer" class="form-label">
+        Producer
+        <i class="bi bi-question-circle"
+            data-bs-toggle="tooltip" 
+            data-bs-placement="right" 
+            title="Name of the person submitting the compound."></i>
+    </label>
+    <input type="text" class="form-control" id="producer" name="producer">
+</div>
+<div class="col-md-3">
+    <label for="supp_id" class="form-label">
+        Supplier ID
+        <i class="bi bi-question-circle"
+            data-bs-toggle="tooltip" 
+            data-bs-placement="right" 
+            title="Identifier given to the compound"></i>
+    </label>
+    <input type="text" class="form-control placeholder-lightgray" id="supp_id" name="supp_id" placeholder="BM-600B">
+</div>
+<div class="col-md-3">
+    <label for="supplier" class="form-label">
+        Supplier
+        <i class="bi bi-question-circle"
+            data-bs-toggle="tooltip" 
+            data-bs-placement="right" 
+            title="Name of company where the compound was purchased. 
+            If synthezised in your lab, please leave it blank"></i>
+    </label>
+    <input type="text" class="form-control placeholder-lightgray" id="supplier" name="supplier" placeholder="Intervet">
+</div>
+<div class="col-md-3">
+    <label for="vol" class="form-label">Volume (&mu;L)</label>
+    <input type="int" class="form-control placeholder-lightgray" id="vol" name="vol" placeholder="502" required>
+</div>
+<div class="col-md-3">
+    <label for="conc" class="form-label">Concentration (mM)</label>
+    <input type="float" class="form-control placeholder-lightgray" id="conc" name="conc" placeholder="10" required>
+</div>
+{% if sample_type == "isolated" %}
+    {% if include_structures %}
+        <div class="col-md-9">
+            <label for="smiles" class="form-label">SMILES string</label>
+            <input type="text" class="form-control placeholder-lightgray" id="smiles" name="smiles" placeholder="C[C@](CO)([C@@H]([C@@]12C(=O)N[C@@](C(=C)CCO1)(C(=O)N2)O)O)O" required>
+        </div>
+        <div class="col-md-3">
+            <label for="stereo_comment" class="form-label">Stereo comment</label>
+            <select class="form-select" name="stereo_comment" id="stereo_comment" required>
+                <option value="">Choose...</option>
+                <option>Racemic</option>
+                <option>Chiral</option>
+                <option>Achiral</option>
+                <option>Either</option>
+                <option>Mixture</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="cas" class="form-label">CAS Number</label>
+            <input type="text" class="form-control placeholder-lightgray" id="cas" name="cas" placeholder="38129-37-2">
+        </div>
+        <div class="col-md-3">
+            <label for="trivial_name" class="form-label">Trivial name</label>
+            <input type="text" class="form-control placeholder-lightgray" id="trivial_name" name="trivial_name" placeholder="Bicozamycin">
+        </div>
+        <div class="col-md-3">
+            <label for="alt_name" class="form-label">Alternative Name</label>
+            <input type="text" class="form-control placeholder-lightgray" id="alt_name" name="alt_name" placeholder="Aizumycin">
+        </div>
+        <div class="col-md-4">
+            <label for="annotation" class="form-label">Annotation</label>
+            <input type="text" class="form-control" id="annotation" name="annotation">
+        </div>
+    {% else %}
+        <div class="col-md-2">
+            <label for="mw" class="form-label">Molecular Weight</label>
+            <input type="float" class="form-control placeholder-lightgray" id="mw" name="mw" placeholder="418">
+        </div>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
