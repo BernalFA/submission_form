@@ -92,12 +92,14 @@ def upload(affiliation, delivery):
             template = "upload_external_solution_plate.html"
         kwargs = {
             "compounds": compounds,
+            "affiliation": affiliation,
             "sample_type": sample_type,
             "include_structures": include_structures
         }
     else:
         template = "upload_internal.html"
         kwargs = {
+            "affiliation": affiliation,
             "compounds": compounds,
             "delivery": delivery,
         }

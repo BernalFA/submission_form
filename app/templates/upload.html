@@ -17,7 +17,7 @@
 
 <div class="container">
     <div class="card p-2 p-md-5 border rounded-3 bg-light">
-        <form action="{{ url_for('main.upload', affiliation='external', delivery=delivery) }}" method="POST">
+        <form action="{{ url_for('main.upload', affiliation=affiliation, delivery=delivery) }}" method="POST">
             <div class="row g-3">
 
                 {% block fields %}{% endblock %}
