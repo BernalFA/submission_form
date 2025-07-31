@@ -31,13 +31,16 @@
                     <tr>
                         <th scope="col">Position</th>
                         <th scope="col">Enso experiment name</th>
-                        <th scope="col">Stereo comment</th>
-                        <th scope="col">Product No.</th>
-                        <th scope="col">Molecular weight</th>
-                        <th scope="col">Amount (mg)</th>
-                        <th scope="col">Volume (&mu;L)</th>
-                        <th scope="col">Conc. (mM)</th>
                         <th scope="col">Project name</th>
+                        <th scope="col">Product No.</th>
+                        <th scope="col">Stereo comment</th>
+                        <th scope="col">Molecular weight</th>
+                        {% if user.delivery == "vials_solid" %}
+                            <th scope="col">Amount (mg)</th>
+                        {% else %}
+                            <th scope="col">Volume (&mu;L)</th>
+                            <th scope="col">Concentration (mM)</th>
+                        {% endif %}
                         <th scope="col">Comment</th>
                     </tr>
                 </thead>
@@ -46,13 +49,16 @@
                     <tr>
                         <th scope="row">{{ compound.position }}</th>
                         <td>{{ compound.exp_name }}</td>
-                        <td>{{ compound.stereo_comment }}</td>
-                        <td>{{ compound.p_num }}</td>
-                        <td>{{ compound.mw }}</td>
-                        <td>{{ compound.amount }}</td>
-                        <td>{{ compound.vol }}</td>
-                        <td>{{ compound.conc }}</td>
                         <td>{{ compound.project }}</td>
+                        <td>{{ compound.p_num }}</td>
+                        <td>{{ compound.stereo_comment }}</td>
+                        <td>{{ compound.mw }}</td>
+                        {% if user.delivery == "vials_solid" %}
+                            <td>{{ compound.amount }}</td>
+                        {% else %}
+                            <td>{{ compound.vol }}</td>
+                            <td>{{ compound.conc }}</td>
+                        {% endif %}
                         <td>{{ compound.comment }}</td>
                     </tr>
                 {% endfor %}
