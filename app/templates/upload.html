@@ -8,77 +8,76 @@
 {% block main %}
 
 <div class="d-flex justify-content-between">
-    <p class="lead">
-        Please fill out the following information for each sample you want to be evaluated 
-        in any of our screening pipelines or to submit to the COMAS collection.*
-        Once you have completed adding information for all the samples, please press 
-        <strong>Next</strong>.
-    </p>
+  <p class="lead">
+    Please fill out the following information for each sample you want to be evaluated 
+    in any of our screening pipelines or to submit to the COMAS collection.*
+    Once you have completed adding information for all the samples, please press 
+    <strong>Next</strong>.
+  </p>
 </div>
 
 <br/>
 
 <div class="container">
-    <div class="card p-2 p-md-5 border rounded-3 bg-light">
-        <form action="{{ url_for('main.upload', affiliation=affiliation, delivery=delivery) }}" method="POST">
-            <div class="row g-3">
+  <div class="card p-2 p-md-5 border rounded-3 bg-light">
+    <form action="{{ url_for('main.upload', affiliation=affiliation, delivery=delivery) }}" method="POST">
+      <div class="row g-3">
 
-                {% block fields %}{% endblock %}
+        {% block fields %}{% endblock %}
 
-                <div class="col-12"></div>
-                <div class="col-md-12">
-                    <label for="comment" class="form-label">
-                        Comment
-                        <i class="bi bi-question-circle"
-                            data-bs-toggle="tooltip" 
-                            data-bs-placement="right" 
-                            title="Enter additional information here, e.g., enantiomeric purity (98% ee) in case of chiral compounds"></i>
-                    </label>
-                    <input type="text" class="form-control" id="comment" name="comment">
-                </div>
-            </div>
+        <div class="col-12"></div>
+        <div class="col-md-12">
+          <label for="comment" class="form-label">
+            Comment
+            <i class="bi bi-question-circle"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="right" 
+                title="Enter additional information here, e.g., enantiomeric purity (98% ee) in case of chiral compounds"></i>
+          </label>
+          <input type="text" class="form-control" id="comment" name="comment">
+        </div>
+      </div>
 
-            <br/>
-            <div class="row">
-                <div class="col-md-12 text-end">
-                    <button type="submit" class="btn btn-secondary">Add</button>
-                </div>
-            </div>
-
-        </form>
-    </div>
+      <br/>
+      <div class="row">
+        <div class="col-md-12 text-end">
+          <button type="submit" class="btn btn-secondary">Add</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 
 <br>
 
 {% if compounds | length > 0 %}
-<div class="container">
+  <div class="container">
     <div class="row g-3">
-        <div class="col-md-9"></div>
-        <div class="col-md-3 text-end">
-            {% if compounds | length == 1 %}
-            <div class="alert alert-success text-center" role="alert">
+      <div class="col-md-9"></div>
+      <div class="col-md-3 text-end">
+        {% if compounds | length == 1 %}
+          <div class="alert alert-success text-center" role="alert">
             You have added {{ compounds | length }} compound
-            </div>
-            {% else %}
-            <div class="alert alert-success" role="alert">
+          </div>
+        {% else %}
+          <div class="alert alert-success" role="alert">
             You have added {{ compounds | length }} compounds
-            </div>
-            {% endif %}
-        </div>
-        <div class="col-md-2"></div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="col-md-2"></div>
     </div>
-</div>
+  </div>
 {% else %}
-<br/>
+  <br/>
 
-<div class="container">
+  <div class="container">
     <div class="d-flex justify-content-between">
-        <p class="text-secondary">
-            * In case of a large number of compounds (>100), you can upload an Excel sheet <a href="{{ url_for('main.upload_from_file', affiliation=affiliation) }}">here</a> with all the required information.
-        </p>
+      <p class="text-secondary">
+        * In case of a large number of compounds (>100), you can upload an Excel sheet <a href="{{ url_for('main.upload_from_file', affiliation=affiliation) }}">here</a> with all the required information.
+      </p>
     </div>
-</div>
+  </div>
 {% endif %}
 
 <script>
@@ -95,12 +94,12 @@
 <hr>
 
 <div class="container">
-    <div class="row g-3">
-        <div class="col-md-3"></div>
-        <div class="col-md-6 text-end">
-            <a href="{{ url_for('main.summary', affiliation=affiliation) }}" class="w-100 btn btn-primary">Next</a>
-        </div>
+  <div class="row g-3">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-end">
+      <a href="{{ url_for('main.summary', affiliation=affiliation) }}" class="w-100 btn btn-primary">Next</a>
     </div>
+  </div>
 </div>
 
 

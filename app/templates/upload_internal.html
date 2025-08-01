@@ -3,58 +3,58 @@
 {% block fields %}
 
 <div class="col-md-6">
-    <label for="exp_name" class="form-label">
-        Enso experiment name
-        <i class="bi bi-question-circle"
-            data-bs-toggle="tooltip" 
-            data-bs-placement="right" 
-            title="Enter a valid experiment name as registered in Enso"></i>
-    </label>
-    <input type="text" class="form-control placeholder-lightgray" id="exp_name" name="exp_name" placeholder="BM-600B" required>
+  <label for="exp_name" class="form-label">
+    Enso experiment name
+    <i class="bi bi-question-circle"
+        data-bs-toggle="tooltip" 
+        data-bs-placement="right" 
+        title="Enter a valid experiment name as registered in Enso"></i>
+  </label>
+  <input type="text" class="form-control placeholder-lightgray" id="exp_name" name="exp_name" placeholder="BM-600B" required>
 </div>
 <div class="col-md-6">
-    <label for="project" class="form-label">Project Name</label>
-    <input type="text" class="form-control placeholder-lightgray" id="project" name="project" placeholder="Bicyclomycin" required>
+  <label for="project" class="form-label">Project Name</label>
+  <input type="text" class="form-control placeholder-lightgray" id="project" name="project" placeholder="Bicyclomycin" required>
 </div>
 <div class="col-md-2">
-    <label for="p_num" class="form-label">
-        Product No.
-        <i class="bi bi-question-circle"
-            data-bs-toggle="tooltip" 
-            data-bs-placement="right" 
-            title="Enter the number of the product as registered in Enso (eg. 2 for 2nd)"></i>
-    </label>
-    <input type="int" class="form-control placeholder-lightgray" id="p_num" name="p_num" placeholder="2">
+  <label for="p_num" class="form-label">
+    Product No.
+    <i class="bi bi-question-circle"
+        data-bs-toggle="tooltip" 
+        data-bs-placement="right" 
+        title="Enter the number of the product as registered in Enso (eg. 2 for 2nd)"></i>
+  </label>
+  <input type="int" class="form-control placeholder-lightgray" id="p_num" name="p_num" placeholder="2">
 </div>
 <div class="col-md-2">
-    <label for="stereo_comment" class="form-label">Stereo comment</label>
-    <select class="form-select" name="stereo_comment" id="stereo_comment" required>
-        <option value="" selected disabled>Choose...</option>
-        <option>Racemic</option>
-        <option>Chiral</option>
-        <option>Achiral</option>
-        <option>Either</option>
-        <option>Mixture</option>
-    </select>
+  <label for="stereo_comment" class="form-label">Stereo comment</label>
+  <select class="form-select" name="stereo_comment" id="stereo_comment" required>
+    <option value="" selected disabled>Choose...</option>
+    <option>Racemic</option>
+    <option>Chiral</option>
+    <option>Achiral</option>
+    <option>Either</option>
+    <option>Mixture</option>
+  </select>
 </div>
 <div class="col-md-2">
-    <label for="mw" class="form-label">Molecular Weight</label>
-    <input type="float" class="form-control placeholder-lightgray" id="mw" name="mw" placeholder="418">
+  <label for="mw" class="form-label">Molecular Weight</label>
+  <input type="float" class="form-control placeholder-lightgray" id="mw" name="mw" placeholder="418">
 </div>
 {% if delivery == "vials_solid" %}
-    <div class="col-md-3">
-        <label for="amount" class="form-label">Amount (mg)</label>
-        <input type="text" class="form-control placeholder-lightgray" id="amount" name="amount" placeholder="2.1" required>
-    </div>
+  <div class="col-md-3">
+    <label for="amount" class="form-label">Amount (mg)</label>
+    <input type="text" class="form-control placeholder-lightgray" id="amount" name="amount" placeholder="2.1" required>
+  </div>
 {% else %}
-    <div class="col-md-3">
-        <label for="vol" class="form-label">Volume (&mu;L)</label>
-        <input type="int" class="form-control placeholder-lightgray" id="vol" name="vol" placeholder="502" required>
-    </div>
-    <div class="col-md-3">
-        <label for="conc" class="form-label">Concentration (mM)</label>
-        <input type="float" class="form-control placeholder-lightgray" id="conc" name="conc" placeholder="10" required>
-    </div>
+  <div class="col-md-3">
+    <label for="vol" class="form-label">Volume (&mu;L)</label>
+    <input type="int" class="form-control placeholder-lightgray" id="vol" name="vol" placeholder="502" required>
+  </div>
+  <div class="col-md-3">
+    <label for="conc" class="form-label">Concentration (mM)</label>
+    <input type="float" class="form-control placeholder-lightgray" id="conc" name="conc" placeholder="10" required>
+  </div>
 {% endif %}
 
 

@@ -7,30 +7,30 @@ sample: {{ sample_type }}
 structures: {{ include_structures }}
 
 <tr>
-    <th scope="col">Position</th>
-    <th scope="col">Project name</th>
-    <th scope="col">Producer</th>
-    <th scope="col">Supplier ID</th>
-    <th scope="col">Supplier</th>
-    {% if delivery == "vials_solid" %}
-        <th scope="col">Amount (mg)</th>
+  <th scope="col">Position</th>
+  <th scope="col">Project name</th>
+  <th scope="col">Producer</th>
+  <th scope="col">Supplier ID</th>
+  <th scope="col">Supplier</th>
+  {% if delivery == "vials_solid" %}
+    <th scope="col">Amount (mg)</th>
+  {% else %}
+    <th scope="col">Volume (&mu;L)</th>
+    <th scope="col">Concentration (mM)</th>
+  {% endif %}
+  {% if sample_type == "isolated" %}
+    {% if include_structures %}
+      <th scope="col">SMILES string</th>
+      <th scope="col">Stereo comment</th>
+      <th scope="col">CAS No.</th>
+      <th scope="col">Trivial name</th>
+      <th scope="col">Alternative name</th>
+      <th scope="col">Annotation</th>
     {% else %}
-        <th scope="col">Volume (&mu;L)</th>
-        <th scope="col">Concentration (mM)</th>
+      <th scope="col">Molecular weight</th>
     {% endif %}
-    {% if sample_type == "isolated" %}
-        {% if include_structures %}
-            <th scope="col">SMILES string</th>
-            <th scope="col">Stereo comment</th>
-            <th scope="col">CAS No.</th>
-            <th scope="col">Trivial name</th>
-            <th scope="col">Alternative name</th>
-            <th scope="col">Annotation</th>
-        {% else %}
-            <th scope="col">Molecular weight</th>
-        {% endif %}
-    {% endif %}
-    <th scope="col">Comment</th>
+  {% endif %}
+  <th scope="col">Comment</th>
 </tr>
 
 {% endblock %}
@@ -39,38 +39,38 @@ structures: {{ include_structures }}
 {% block tbody %}
 
 {% for compound in compounds %} 
-    <tr>
-        <th scope="row">{{ compound.position }}</th>
-        <td>{{ compound.project }}</td>
-        <td>{{ compound.producer }}</td>
-        <td>{{ compound.supp_id }}</td>
-        <td>{{ compound.supplier }}</td>
-        {% if delivery == "vials_solid" %}
-            <td>{{ compound.amount }}</td>
-        {% else %}
-            <td>{{ compound.vol }}</td>
-            <td>{{ compound.conc }}</td>
-        {% endif %}
-        {% if sample_type == "isolated" %}
-            {% if include_structures %}
-                <td class="smiles-popover text-truncate" style="max-width: 200px;"
-                    data-smiles="{{ compound.id }}"
-                    data-bs-toggle="tooltip"
-                    data-bs-html="true"
-                    data-bs-title="Loading...">
-                    {{ compound.smiles }}
-                </td>
-                <td>{{ compound.stereo_comment }}</td>
-                <td>{{ compound.cas }}</td>
-                <td>{{ compound.trivial_name }}</td>
-                <td>{{ compound.alt_name }}</td>
-                <td>{{ compound.annotation }}</td>
-            {% else %}
-                <td>{{ compound.mw }}</td>
-            {% endif %}
-        {% endif %}
-        <td>{{ compound.comment }}</td>
-    </tr>
+  <tr>
+    <th scope="row">{{ compound.position }}</th>
+    <td>{{ compound.project }}</td>
+    <td>{{ compound.producer }}</td>
+    <td>{{ compound.supp_id }}</td>
+    <td>{{ compound.supplier }}</td>
+    {% if delivery == "vials_solid" %}
+      <td>{{ compound.amount }}</td>
+    {% else %}
+      <td>{{ compound.vol }}</td>
+      <td>{{ compound.conc }}</td>
+    {% endif %}
+    {% if sample_type == "isolated" %}
+      {% if include_structures %}
+        <td class="smiles-popover text-truncate" style="max-width: 200px;"
+          data-smiles="{{ compound.id }}"
+          data-bs-toggle="tooltip"
+          data-bs-html="true"
+          data-bs-title="Loading...">
+          {{ compound.smiles }}
+        </td>
+        <td>{{ compound.stereo_comment }}</td>
+        <td>{{ compound.cas }}</td>
+        <td>{{ compound.trivial_name }}</td>
+        <td>{{ compound.alt_name }}</td>
+        <td>{{ compound.annotation }}</td>
+      {% else %}
+        <td>{{ compound.mw }}</td>
+      {% endif %}
+    {% endif %}
+    <td>{{ compound.comment }}</td>
+  </tr>
 {% endfor %}
 
 {% endblock %}
