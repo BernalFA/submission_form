@@ -1,6 +1,19 @@
-{% extends 'from_file.html' %}
+{% extends 'base.html' %}
 
-{% block form %}
+{% block title %}
+<title>COMAS sample submission</title>
+{% endblock %}
+
+
+{% block main %}
+
+<div class="d-flex justify-content-between">
+    <p class="lead">
+        In order to simplify the submission process for large collection of samples (>100), please fill out the requested information in this Excel sheet and upload it below. Be aware that any modification to the template is <strong>not allowed</strong> (e.g. adding or removing column, renaming columns) and will result in an <strong>error</strong>.
+    </p>
+</div>
+
+<br/>
 
 <div class="container">
     <div class="row g-3">
@@ -13,7 +26,7 @@
             <div class="alert alert-warning d-flex align-items-center justify-content-center" style="height: 46px;" role="alert">
                 <svg class="bi flex-shrink-0 me-2" width="16" height="16" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                 <div>
-                    Submission using a file is incompatible with manually added data. If you want to continue with an existing manual entry, please <a href="{{ url_for('main.upload', affiliation='external') }}">go back</a>.
+                    Submission using a file is incompatible with manually added data. If you want to continue with an existing manual entry, please <a href="{{ url_for('main.upload', affiliation=affiliation, delivery=delivery) }}">go back</a>.
                 </div>
             </div>
         </div>
@@ -37,9 +50,9 @@
                         <div class="accordion-body">
                             <div class="d-flex align-items-center">
                                 <span>
-                                    Here you can download an Excel sheet template to fill out all the information required for the registration. 
+                                    Here you can download an Excel sheet template to fill out all the information required for the submission. 
                                 </span>
-                                <a href="{{ url_for('main.download_template', affiliation='external') }}" class="btn btn-secondary ms-3">Download Template</a>
+                                <a href="{{ url_for('main.download_template', affiliation=affiliation) }}" class="btn btn-secondary ms-3">Download Template</a>
                             </div>
                         </div>
                     </div>
@@ -54,7 +67,7 @@
                         <div class="accordion-body">
                             <div class="row g-3">
                                 <div class="col-md-12">
-                                    Once you have completely and correctly filled out the Excel sheet, please upload it to our system. 
+                                    Once you have completely and correctly filled out the provided Excel sheet template, please upload it to our system. 
                                 </div>
                                 <br>
                                 <div class="col-md-12">
@@ -103,17 +116,13 @@
 </div>
 {% endif %}
 
-{% endblock %}
-
-{% block submit %}
-
 <hr>
 
 <div class="container">
     <div class="row g-3">
         <div class="col-md-3"></div>
         <div class="col-md-6 text-end">
-            <a href="{{ url_for('main.summary', affiliation='external') }}" class="w-100 btn btn-primary">Next</a>
+            <a href="{{ url_for('main.summary', affiliation=affiliation) }}" class="w-100 btn btn-primary">Next</a>
         </div>
     </div>
 </div>

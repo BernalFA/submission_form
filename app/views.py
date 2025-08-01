@@ -122,6 +122,7 @@ def download_template(affiliation):
 @main_bp.route("/upload_from_file/<affiliation>", methods=["GET", "POST"])
 def upload_from_file(affiliation):
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
+    delivery = session["delivery"]
     if request.method == "POST":
         file = request.files["file"]
 
@@ -159,8 +160,8 @@ def upload_from_file(affiliation):
             except Exception as e:
                 return f"ERROR: {e}"
 
-        return redirect(url_for("main.upload_from_file", affiliation=affiliation))
-    return render_template(f"upload_{affiliation}_from_file.html", compounds=compounds)
+        return redirect(url_for("main.upload_from_file", affiliation=affiliation, compounds=compounds))
+    return render_template("upload_from_file.html", affiliation=affiliation, delivery=delivery, compounds=compounds)
 
 
 @main_bp.route("/mol_png/<int:mol_id>")
