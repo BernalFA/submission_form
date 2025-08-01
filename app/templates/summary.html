@@ -17,24 +17,57 @@
 }
 </style>
 
+<div class="d-flex justify-content-between">
+  <p class="lead">
+    Following you have the summary of the information provided. 
+    To agree with it and finalize this session, please press <strong>Finish</strong>.
+  </p>
+</div>
+
 <div class="container">
     <div class="card p-2 p-md-5 border rounded-3">
-        <h2>Submission summary</h2>
-        <hr>
-        <p class="lead">
-        User: {{ user.username }}
-        </p>
-        
-        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-            <table class="table table-striped">
-                <thead>
-                    {% block thead %}{% endblock %}
-                </thead>
-                <tbody>
-                    {% block tbody %}{% endblock %}
-                </tbody>
-            </table>
+      <div class="row g3">
+        <div class="col-md-2">
+          <h3>Summary</h3>
+          <hr>
         </div>
+        <div class="col-md-10"></div>
+        <div class="col-md-4">
+          <strong>User:</strong> {{ user.username }}
+        </div>
+        <div class="col-md-4">
+          {% if "vials" in delivery %}
+            <strong>Delivery:</strong> vials
+          {% else %}
+            <strong>Delivery:</strong> plate
+          {% endif %}
+        </div>
+        <div class="col-md-4">
+          <strong>Sample type:</strong> {{ sample_type }}
+        </div>
+        <div class="col-md-4">
+          {% if include_structures %}
+            <strong>Provide structures:</strong> yes
+          {% else %}
+            <strong>Provide structures:</strong> no
+          {% endif %}
+        </div>
+        <div class="col-md-4">
+          <strong>Compounds registered:</strong> {{ compounds | length }}
+        </div>
+      </div>
+      <div class="row mb-4"></div>
+      <hr>
+      <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+        <table class="table table-striped">
+          <thead>
+            {% block thead %}{% endblock %}
+          </thead>
+          <tbody>
+            {% block tbody %}{% endblock %}
+          </tbody>
+        </table>
+      </div>
     </div>
 </div>
 
