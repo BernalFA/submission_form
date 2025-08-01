@@ -34,16 +34,24 @@
                         <th scope="col">Producer</th>
                         <th scope="col">Supplier ID</th>
                         <th scope="col">Supplier</th>
-                        <th scope="col">Amount (mg)</th>
-                        <th scope="col">Volume (&mu;L)</th>
-                        <th scope="col">Conc. (mM)</th>
-                        <th scope="col">SMILES string</th>
-                        <th scope="col">Stereo comment</th>
-                        <th scope="col">CAS No.</th>
-                        <th scope="col">Trivial name</th>
-                        <th scope="col">Alternative name</th>
-                        <th scope="col">Annotation</th>
-                        <th scope="col">Molecular weight</th>
+                        {% if user.delivery == "vials_solid" %}
+                            <th scope="col">Amount (mg)</th>
+                        {% else %}
+                            <th scope="col">Volume (&mu;L)</th>
+                            <th scope="col">Concentration (mM)</th>
+                        {% endif %}
+                        {% if user.sample_type == "isolated" %}
+                            {% if user.include_structures %}
+                                <th scope="col">SMILES string</th>
+                                <th scope="col">Stereo comment</th>
+                                <th scope="col">CAS No.</th>
+                                <th scope="col">Trivial name</th>
+                                <th scope="col">Alternative name</th>
+                                <th scope="col">Annotation</th>
+                            {% else %}
+                                <th scope="col">Molecular weight</th>
+                            {% endif %}
+                        {% endif %}
                         <th scope="col">Comment</th>
                     </tr>
                 </thead>
@@ -55,22 +63,30 @@
                         <td>{{ compound.producer }}</td>
                         <td>{{ compound.supp_id }}</td>
                         <td>{{ compound.supplier }}</td>
-                        <td>{{ compound.amount }}</td>
-                        <td>{{ compound.vol }}</td>
-                        <td>{{ compound.conc }}</td>
-                        <td class="smiles-popover text-truncate" style="max-width: 200px;"
-                            data-smiles="{{ compound.id }}"
-                            data-bs-toggle="tooltip"
-                            data-bs-html="true"
-                            data-bs-title="Loading...">
-                            {{ compound.smiles }}
-                        </td>
-                        <td>{{ compound.stereo_comment }}</td>
-                        <td>{{ compound.cas }}</td>
-                        <td>{{ compound.trivial_name }}</td>
-                        <td>{{ compound.alt_name }}</td>
-                        <td>{{ compound.annotation }}</td>
-                        <td>{{ compound.mw }}</td>
+                        {% if user.delivery == "vials_solid" %}
+                            <td>{{ compound.amount }}</td>
+                        {% else %}
+                            <td>{{ compound.vol }}</td>
+                            <td>{{ compound.conc }}</td>
+                        {% endif %}
+                        {% if user.sample_type == "isolated" %}
+                            {% if user.include_structures %}
+                                <td class="smiles-popover text-truncate" style="max-width: 200px;"
+                                    data-smiles="{{ compound.id }}"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-html="true"
+                                    data-bs-title="Loading...">
+                                    {{ compound.smiles }}
+                                </td>
+                                <td>{{ compound.stereo_comment }}</td>
+                                <td>{{ compound.cas }}</td>
+                                <td>{{ compound.trivial_name }}</td>
+                                <td>{{ compound.alt_name }}</td>
+                                <td>{{ compound.annotation }}</td>
+                            {% else %}
+                                <td>{{ compound.mw }}</td>
+                            {% endif %}
+                        {% endif %}
                         <td>{{ compound.comment }}</td>
                     </tr>
                 {% endfor %}
