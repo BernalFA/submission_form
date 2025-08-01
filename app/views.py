@@ -142,6 +142,7 @@ def upload_from_file(affiliation):
             return redirect(request.url)
 
         df = pd.read_excel(file)
+        session["upload_failed"] = False
         df.dropna(
             subset=[col for col in df.columns if col != "Position"],
             how="all",
@@ -159,9 +160,9 @@ def upload_from_file(affiliation):
                 db.session.commit()
             except Exception as e:
                 return f"ERROR: {e}"
-
         return redirect(url_for("main.upload_from_file", affiliation=affiliation, compounds=compounds))
-    return render_template("upload_from_file.html", affiliation=affiliation, delivery=delivery, compounds=compounds)
+    upload_failed = session.pop("upload_failed", True)
+    return render_template("upload_from_file.html", affiliation=affiliation, delivery=delivery, upload_failed=upload_failed, compounds=compounds)
 
 
 @main_bp.route("/mol_png/<int:mol_id>")
