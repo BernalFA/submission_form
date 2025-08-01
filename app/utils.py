@@ -21,6 +21,9 @@ class PositionGenerator:
         except StopIteration:
             print("Plate full")
 
+    def reset(self):
+        self._positions = iter(self._create_plate_positions())
+
     def _create_plate_positions(self):
         nums = range(1, 13)
         letters = [chr(character) for character in range(ord("A"), ord("H") + 1)]

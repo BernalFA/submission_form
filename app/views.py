@@ -180,4 +180,5 @@ def reset_session():
         CompoundManager.query.filter_by(session_id=session_id).delete()
         db.session.commit()
     session.clear()
+    position_generator.reset()
     return redirect(url_for("main.end"))
