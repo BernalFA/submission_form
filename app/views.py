@@ -70,7 +70,7 @@ def upload(affiliation, delivery):
             entry["session_id"] = session["session_id"]
             if delivery in ["vials_solid", "vials_solution"]:
                 entry["position"] = position_generator.get_position()
-            if include_structures:
+            if include_structures and affiliation == "external":
                 entry["png"] = smiles_to_png_base64(entry["smiles"])
             new_entry = CompoundManager(**entry)
             try:
