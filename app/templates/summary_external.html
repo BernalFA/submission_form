@@ -1,138 +1,72 @@
-{% extends 'base.html' %}
+{% extends 'summary.html' %}
 
-{% block title %}
-<title>COMAS submission summary</title>
+{% block thead %}
+
+<tr>
+    <th scope="col">Position</th>
+    <th scope="col">Project name</th>
+    <th scope="col">Producer</th>
+    <th scope="col">Supplier ID</th>
+    <th scope="col">Supplier</th>
+    {% if user.delivery == "vials_solid" %}
+        <th scope="col">Amount (mg)</th>
+    {% else %}
+        <th scope="col">Volume (&mu;L)</th>
+        <th scope="col">Concentration (mM)</th>
+    {% endif %}
+    {% if user.sample_type == "isolated" %}
+        {% if user.include_structures %}
+            <th scope="col">SMILES string</th>
+            <th scope="col">Stereo comment</th>
+            <th scope="col">CAS No.</th>
+            <th scope="col">Trivial name</th>
+            <th scope="col">Alternative name</th>
+            <th scope="col">Annotation</th>
+        {% else %}
+            <th scope="col">Molecular weight</th>
+        {% endif %}
+    {% endif %}
+    <th scope="col">Comment</th>
+</tr>
+
 {% endblock %}
 
 
-{% block main %}
+{% block tbody %}
 
-<style>
-.table thead th {
-    position: sticky; /* keep header when scrolling */
-    top: 0;
-    background: #fff;
-    z-index: 2; /* ensures stacking above other elements */
-    box-shadow: 0 3px 0 0 #000; /* Adds a shadow line for extra visibility */
-}
-</style>
-
-<div class="container">
-    <div class="card p-2 p-md-5 border rounded-3">
-        <h2>Submission summary</h2>
-        <hr>
-        <p class="lead">
-        User: {{ user.username }}
-        </p>
-        
-        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Position</th>
-                        <th scope="col">Project name</th>
-                        <th scope="col">Producer</th>
-                        <th scope="col">Supplier ID</th>
-                        <th scope="col">Supplier</th>
-                        {% if user.delivery == "vials_solid" %}
-                            <th scope="col">Amount (mg)</th>
-                        {% else %}
-                            <th scope="col">Volume (&mu;L)</th>
-                            <th scope="col">Concentration (mM)</th>
-                        {% endif %}
-                        {% if user.sample_type == "isolated" %}
-                            {% if user.include_structures %}
-                                <th scope="col">SMILES string</th>
-                                <th scope="col">Stereo comment</th>
-                                <th scope="col">CAS No.</th>
-                                <th scope="col">Trivial name</th>
-                                <th scope="col">Alternative name</th>
-                                <th scope="col">Annotation</th>
-                            {% else %}
-                                <th scope="col">Molecular weight</th>
-                            {% endif %}
-                        {% endif %}
-                        <th scope="col">Comment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for compound in compounds %} 
-                    <tr>
-                        <th scope="row">{{ compound.position }}</th>
-                        <td>{{ compound.project }}</td>
-                        <td>{{ compound.producer }}</td>
-                        <td>{{ compound.supp_id }}</td>
-                        <td>{{ compound.supplier }}</td>
-                        {% if user.delivery == "vials_solid" %}
-                            <td>{{ compound.amount }}</td>
-                        {% else %}
-                            <td>{{ compound.vol }}</td>
-                            <td>{{ compound.conc }}</td>
-                        {% endif %}
-                        {% if user.sample_type == "isolated" %}
-                            {% if user.include_structures %}
-                                <td class="smiles-popover text-truncate" style="max-width: 200px;"
-                                    data-smiles="{{ compound.id }}"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-html="true"
-                                    data-bs-title="Loading...">
-                                    {{ compound.smiles }}
-                                </td>
-                                <td>{{ compound.stereo_comment }}</td>
-                                <td>{{ compound.cas }}</td>
-                                <td>{{ compound.trivial_name }}</td>
-                                <td>{{ compound.alt_name }}</td>
-                                <td>{{ compound.annotation }}</td>
-                            {% else %}
-                                <td>{{ compound.mw }}</td>
-                            {% endif %}
-                        {% endif %}
-                        <td>{{ compound.comment }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<hr>
-
-<div class="container">
-    <div class="row g-3">
-        <div class="col-md-3"></div>
-        <div class="col-md-6 text-end">
-            <a href="{{ url_for('main.reset_session') }}" class="w-100 btn btn-primary">Finish</a>
-        </div>
-    </div>
-</div>
-
-<!-- This js section was obtained with ChatGPT -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const cells = document.querySelectorAll('.smiles-popover');
-
-  cells.forEach(cell => {
-    const popover = new bootstrap.Popover(cell, {
-      html: true,
-      trigger: 'hover',
-      content: 'Loading...',
-      placement: 'right',
-      title: ''
-    });
-
-    cell.addEventListener('mouseenter', async () => {
-      const smiles = encodeURIComponent(cell.dataset.smiles);
-      try {
-        const res = await fetch(`/mol_png/${smiles}`);
-        const html = await res.text();
-        popover.setContent({ '.popover-body': html });
-      } catch (err) {
-        popover.setContent({ '.popover-body': 'Error loading image.' });
-      }
-    });
-  });
-});
-</script>
+{% for compound in compounds %} 
+    <tr>
+        <th scope="row">{{ compound.position }}</th>
+        <td>{{ compound.project }}</td>
+        <td>{{ compound.producer }}</td>
+        <td>{{ compound.supp_id }}</td>
+        <td>{{ compound.supplier }}</td>
+        {% if user.delivery == "vials_solid" %}
+            <td>{{ compound.amount }}</td>
+        {% else %}
+            <td>{{ compound.vol }}</td>
+            <td>{{ compound.conc }}</td>
+        {% endif %}
+        {% if user.sample_type == "isolated" %}
+            {% if user.include_structures %}
+                <td class="smiles-popover text-truncate" style="max-width: 200px;"
+                    data-smiles="{{ compound.id }}"
+                    data-bs-toggle="tooltip"
+                    data-bs-html="true"
+                    data-bs-title="Loading...">
+                    {{ compound.smiles }}
+                </td>
+                <td>{{ compound.stereo_comment }}</td>
+                <td>{{ compound.cas }}</td>
+                <td>{{ compound.trivial_name }}</td>
+                <td>{{ compound.alt_name }}</td>
+                <td>{{ compound.annotation }}</td>
+            {% else %}
+                <td>{{ compound.mw }}</td>
+            {% endif %}
+        {% endif %}
+        <td>{{ compound.comment }}</td>
+    </tr>
+{% endfor %}
 
 {% endblock %}

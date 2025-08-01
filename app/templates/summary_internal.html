@@ -1,82 +1,44 @@
-{% extends 'base.html' %}
+{% extends 'summary.html' %}
 
-{% block title %}
-<title>COMAS submission summary</title>
+{% block thead %}
+
+<tr>
+    <th scope="col">Position</th>
+    <th scope="col">Enso experiment name</th>
+    <th scope="col">Project name</th>
+    <th scope="col">Product No.</th>
+    <th scope="col">Stereo comment</th>
+    <th scope="col">Molecular weight</th>
+    {% if user.delivery == "vials_solid" %}
+        <th scope="col">Amount (mg)</th>
+    {% else %}
+        <th scope="col">Volume (&mu;L)</th>
+        <th scope="col">Concentration (mM)</th>
+    {% endif %}
+    <th scope="col">Comment</th>
+</tr>
+
 {% endblock %}
 
 
-{% block main %}
+{% block tbody %}
 
-<style>
-.table thead th {
-    position: sticky; /* keep header when scrolling */
-    top: 0;
-    background: #fff;
-    z-index: 2; /* ensures stacking above other elements */
-    box-shadow: 0 3px 0 0 #000; /* Adds a shadow line for extra visibility */
-}
-</style>
-
-<div class="container">
-    <div class="card p-2 p-md-5 border rounded-3">
-        <h2>Submission summary</h2>
-        <hr>
-        <p class="lead">
-        User: {{ user.username }}
-        </p>
-        
-        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Position</th>
-                        <th scope="col">Enso experiment name</th>
-                        <th scope="col">Project name</th>
-                        <th scope="col">Product No.</th>
-                        <th scope="col">Stereo comment</th>
-                        <th scope="col">Molecular weight</th>
-                        {% if user.delivery == "vials_solid" %}
-                            <th scope="col">Amount (mg)</th>
-                        {% else %}
-                            <th scope="col">Volume (&mu;L)</th>
-                            <th scope="col">Concentration (mM)</th>
-                        {% endif %}
-                        <th scope="col">Comment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for compound in compounds %} 
-                    <tr>
-                        <th scope="row">{{ compound.position }}</th>
-                        <td>{{ compound.exp_name }}</td>
-                        <td>{{ compound.project }}</td>
-                        <td>{{ compound.p_num }}</td>
-                        <td>{{ compound.stereo_comment }}</td>
-                        <td>{{ compound.mw }}</td>
-                        {% if user.delivery == "vials_solid" %}
-                            <td>{{ compound.amount }}</td>
-                        {% else %}
-                            <td>{{ compound.vol }}</td>
-                            <td>{{ compound.conc }}</td>
-                        {% endif %}
-                        <td>{{ compound.comment }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<hr>
-
-<div class="container">
-    <div class="row g-3">
-        <div class="col-md-3"></div>
-        <div class="col-md-6 text-end">
-            <a href="{{ url_for('main.reset_session') }}" class="w-100 btn btn-primary">Finish</a>
-        </div>
-    </div>
-</div>
+{% for compound in compounds %} 
+    <tr>
+        <th scope="row">{{ compound.position }}</th>
+        <td>{{ compound.exp_name }}</td>
+        <td>{{ compound.project }}</td>
+        <td>{{ compound.p_num }}</td>
+        <td>{{ compound.stereo_comment }}</td>
+        <td>{{ compound.mw }}</td>
+        {% if user.delivery == "vials_solid" %}
+            <td>{{ compound.amount }}</td>
+        {% else %}
+            <td>{{ compound.vol }}</td>
+            <td>{{ compound.conc }}</td>
+        {% endif %}
+        <td>{{ compound.comment }}</td>
+    </tr>
+{% endfor %}
 
 {% endblock %}
