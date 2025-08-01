@@ -64,6 +64,7 @@ def index():
 @main_bp.route("/upload/<string:affiliation>/<string:delivery>", methods=["GET", "POST"])
 def upload(affiliation, delivery):
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
+    include_structures = session["include_structures"]
     if request.method == "POST":
         entry = request.form
         entry = make_input_valid(entry)
@@ -71,7 +72,7 @@ def upload(affiliation, delivery):
             entry["session_id"] = session["session_id"]
             if delivery in ["vials_solid", "vials_solution"]:
                 entry["position"] = position_generator.get_position()
-            elif delivery == "plate":
+            if include_structures:
                 entry["png"] = smiles_to_png_base64(entry["smiles"])
             new_entry = CompoundManager(**entry)
             try:
@@ -94,7 +95,7 @@ def upload(affiliation, delivery):
         elif delivery == "plate":
             template = "upload_external_solution_plate.html"
         kwargs["sample_type"] = session["sample_type"]
-        kwargs["include_structures"] = session["include_structures"]
+        kwargs["include_structures"] = include_structures
     else:
         template = "upload_internal.html"
     return render_template(template, **kwargs)
