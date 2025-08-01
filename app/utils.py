@@ -38,9 +38,9 @@ class PositionGenerator:
 
 
 def get_allowed_sql_fields():
-    internal_fields = set(ALLOWED_FIELDS["internal"].values())
-    external_fields = set(ALLOWED_FIELDS["external"].values())
-    return internal_fields & external_fields
+    internal_fields = list(ALLOWED_FIELDS["internal"].values())
+    external_fields = list(ALLOWED_FIELDS["external"].values())
+    return set(internal_fields + external_fields)
 
 
 def make_input_valid(entry):
