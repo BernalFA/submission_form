@@ -2,20 +2,24 @@
 
 {% block thead %}
 
+delivery: {{ delivery }}
+sample: {{ sample_type }}
+structures: {{ include_structures }}
+
 <tr>
     <th scope="col">Position</th>
     <th scope="col">Project name</th>
     <th scope="col">Producer</th>
     <th scope="col">Supplier ID</th>
     <th scope="col">Supplier</th>
-    {% if user.delivery == "vials_solid" %}
+    {% if delivery == "vials_solid" %}
         <th scope="col">Amount (mg)</th>
     {% else %}
         <th scope="col">Volume (&mu;L)</th>
         <th scope="col">Concentration (mM)</th>
     {% endif %}
-    {% if user.sample_type == "isolated" %}
-        {% if user.include_structures %}
+    {% if sample_type == "isolated" %}
+        {% if include_structures %}
             <th scope="col">SMILES string</th>
             <th scope="col">Stereo comment</th>
             <th scope="col">CAS No.</th>
@@ -41,14 +45,14 @@
         <td>{{ compound.producer }}</td>
         <td>{{ compound.supp_id }}</td>
         <td>{{ compound.supplier }}</td>
-        {% if user.delivery == "vials_solid" %}
+        {% if delivery == "vials_solid" %}
             <td>{{ compound.amount }}</td>
         {% else %}
             <td>{{ compound.vol }}</td>
             <td>{{ compound.conc }}</td>
         {% endif %}
-        {% if user.sample_type == "isolated" %}
-            {% if user.include_structures %}
+        {% if sample_type == "isolated" %}
+            {% if include_structures %}
                 <td class="smiles-popover text-truncate" style="max-width: 200px;"
                     data-smiles="{{ compound.id }}"
                     data-bs-toggle="tooltip"

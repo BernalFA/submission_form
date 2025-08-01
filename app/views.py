@@ -105,7 +105,7 @@ def summary(affiliation):
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
     # export_to_excel(user, compounds)
-    return render_template(f"summary_{affiliation}.html", user=user, compounds=compounds)
+    return render_template(f"summary_{affiliation}.html", user=user, delivery=session["delivery"], sample_type=session["sample_type"], include_structures=session["include_structures"], compounds=compounds)
 
 
 @main_bp.route("/end")
