@@ -48,8 +48,6 @@ def index():
             username=user_form.username.data,
             email=user_form.email.data,
             affiliation=affiliation,
-            delivery=user_form.delivery.data,
-            include_structures=user_form.include_structures.data == "true"
         )
         try:
             db.session.add(entry)

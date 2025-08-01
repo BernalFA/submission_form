@@ -44,5 +44,3 @@ class UserManager(db.Model):
     username = db.Column(db.String)
     email = db.Column(db.String)
     affiliation = db.Column(db.String)
-    delivery = db.Column(db.String)
-    include_structures = db.Column(db.Boolean)
