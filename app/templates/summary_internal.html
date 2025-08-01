@@ -9,7 +9,7 @@
     <th scope="col">Product No.</th>
     <th scope="col">Stereo comment</th>
     <th scope="col">Molecular weight</th>
-    {% if user.delivery == "vials_solid" %}
+    {% if delivery == "vials_solid" %}
         <th scope="col">Amount (mg)</th>
     {% else %}
         <th scope="col">Volume (&mu;L)</th>
@@ -31,7 +31,7 @@
         <td>{{ compound.p_num }}</td>
         <td>{{ compound.stereo_comment }}</td>
         <td>{{ compound.mw }}</td>
-        {% if user.delivery == "vials_solid" %}
+        {% if delivery == "vials_solid" %}
             <td>{{ compound.amount }}</td>
         {% else %}
             <td>{{ compound.vol }}</td>
