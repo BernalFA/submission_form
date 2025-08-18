@@ -19,7 +19,7 @@ class UserDataForm(FlaskForm):
     delivery = SelectField(
         "Samples delivered in",
         choices=[
-            ("vials_solid", "Vials (solids)"),
+            ("vials_solid", "Vials (no solvent)"),
             ("vials_solution", "Vials (DMSO solution)"),
             ("plate", "Plate"),
         ]
