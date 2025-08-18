@@ -8,10 +8,7 @@ load_dotenv()
 # define Flask-SQLAlchemy configuration
 class Config:
     SECRET_KEY = os.getenv("FLASK-WTFS_KEY")
-    SQLALCHEMY_DATABASE_URI = "sqlite:///compounds.db"
-    SQLALCHEMY_BINDS = {
-        "user": "sqlite:///user.db",
-    }
+    SQLALCHEMY_DATABASE_URI = "sqlite:///database.db"
 
 
 # Define fields for database creation

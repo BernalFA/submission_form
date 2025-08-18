@@ -5,9 +5,12 @@ from app.extensions import db
 # based on YouTube video
 # https://www.youtube.com/watch?v=45P3xQPaYxc
 class CompoundManager(db.Model):
+    __tablename__ = "compounds"
     id = db.Column(db.Integer, primary_key=True)
     session_id = db.Column(db.String(100))
     position = db.Column(db.String, unique=True)
+    # Foreign key to User
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     # Shared
     stereo_comment = db.Column(db.String, nullable=True)
@@ -38,7 +41,7 @@ class CompoundManager(db.Model):
 
 
 class UserManager(db.Model):
-    __bind_key__ = "user"
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     session_id = db.Column(db.String(100))
     username = db.Column(db.String)
