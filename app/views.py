@@ -121,18 +121,22 @@ def upload_internal_from_file():
             return redirect(request.url)
 
         # filename = secure_filename(file.filename)
-        file_bytes = file.read()
-        file.seek(0)  # Reset stream pointer after reading
+        # file_bytes = file.read()
+        # file.seek(0)  # Reset stream pointer after reading
 
-        if not validate_excel_template(file_bytes, "internal"):
-            flash("Uploaded Excel file does not match the expected template!")
-            return redirect(request.url)
+        # if not validate_excel_template(file_bytes, "internal"):
+        #     flash("Uploaded Excel file does not match the expected template!")
+        #     return redirect(request.url)
 
         # filepath = os.path.join(main_bp.root_path, "uploads", filename)
         # file.save(filepath)
         # flash("File uploaded successfully!")
         df = pd.read_excel(file)
         df.dropna(subset=[col for col in df.columns if col != "Position"], how="all", inplace=True)
+        errors = validate_excel_template(df, "internal")
+        if errors:
+            for error in errors:
+                flash(error)
 
         for _, row in df.iterrows():
             new_entry = CompoundManagerInternal(
