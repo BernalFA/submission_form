@@ -23,7 +23,7 @@ class ColumnRule:
 
 base_schema = {
     "Position": ColumnRule(required=True, db_name="position", type=str),
-    "Stereo comment": ColumnRule(required=False, db_name="stereo_comment"),
+    "Stereo comment": ColumnRule(required=True, db_name="stereo_comment"),
     "Molecular weight": ColumnRule(required=False, db_name="mw"),
     "Amount (mg)": ColumnRule(required=True, db_name="amount"),
     "Volume (µl)": ColumnRule(required=True, db_name="vol"),
