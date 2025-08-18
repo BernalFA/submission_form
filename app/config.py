@@ -13,75 +13,44 @@ class Config:
     SQLALCHEMY_DATABASE_URI = "sqlite:///database.db"
 
 
+# define column names
 @dataclass
 class ColumnRule:
     required: bool
+    db_name: str
     type: Optional[Union[str, int, float]] = None
 
 
 base_schema = {
-    "Position": ColumnRule(required=True, type=str),
-    "Stereo comment": ColumnRule(required=False),
-    "Molecular weight": ColumnRule(required=False),
-    "Amount (mg)": ColumnRule(required=True),
-    "Volume (µl)": ColumnRule(required=True),
-    "Conc. (mM)": ColumnRule(required=True),
-    "Project name": ColumnRule(required=True, type=str),
-    "Comment": ColumnRule(required=False),
+    "Position": ColumnRule(required=True, db_name="position", type=str),
+    "Stereo comment": ColumnRule(required=False, db_name="stereo_comment"),
+    "Molecular weight": ColumnRule(required=False, db_name="mw"),
+    "Amount (mg)": ColumnRule(required=True, db_name="amount"),
+    "Volume (µl)": ColumnRule(required=True, db_name="vol"),
+    "Conc. (mM)": ColumnRule(required=True, db_name="conc"),
+    "Project name": ColumnRule(required=True, db_name="project", type=str),
+    "Comment": ColumnRule(required=False, db_name="comment"),
 }
 
 internal_schema = {
     **base_schema,
-    "Enso experiment name": ColumnRule(required=True, type=str),
-    "Product No": ColumnRule(required=False, type=int),
+    "Enso experiment name": ColumnRule(required=True, db_name="exp_name", type=str),
+    "Product No": ColumnRule(required=False, db_name="p_num", type=int),
 }
 
 external_schema = {
     **base_schema,
-    "Supplier": ColumnRule(required=False),
-    "Supplier ID": ColumnRule(required=True),
-    "Producer": ColumnRule(required=False),
-    "Trivial name": ColumnRule(required=False),
-    "Alternative names": ColumnRule(required=False),
-    "CAS": ColumnRule(required=False),
-    "SMILES": ColumnRule(required=False),
-    "Annotation": ColumnRule(required=False),
+    "Supplier": ColumnRule(required=False, db_name="supplier"),
+    "Supplier ID": ColumnRule(required=True, db_name="supp_id"),
+    "Producer": ColumnRule(required=False, db_name="producer"),
+    "Trivial name": ColumnRule(required=False, db_name="trivial_name"),
+    "Alternative names": ColumnRule(required=False, db_name="alt_name"),
+    "CAS": ColumnRule(required=False, db_name="cas"),
+    "SMILES": ColumnRule(required=False, db_name="smiles"),
+    "Annotation": ColumnRule(required=False, db_name="annotation"),
 }
 
 ALLOWED_SCHEMA = {
     "internal": internal_schema,
     "external": external_schema
 }
-
-
-ALLOWED_FIELDS = {
-    "internal": {
-        "Position": "position",
-        "Enso experiment name": "exp_name",
-        "Stereo comment": "stereo_comment",
-        "Product No": "p_num",
-        "Molecular weight": "mw",
-        "Amount (mg)": "amount",
-        "Volume (µl)": "vol",
-        "Conc. (mM)": "conc",
-        "Project name": "project",
-        "Comment": "comment",
-    },
-    "external": {
-        "Position": "position",
-        "Supplier": "supplier",
-        "Supplier ID": "supp_id",
-        "Producer": "producer",
-        "Stereo comment": "stereo_comment",
-        "Molecular weight": "mw",
-        "Amount (mg)": "amount",
-        "Volume (µl)": "vol",
-        "Conc. (mM)": "conc",
-        "Project name": "project",
-        "Trivial name": "trivial_name",
-        "Alternative names": "alt_name",
-        "CAS": "cas",
-        "SMILES": "smiles",
-        "Annotation": "annotation",
-        "Comment": "comment",
-    },

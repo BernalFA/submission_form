@@ -6,7 +6,7 @@ import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import Draw
 
-from app.config import ALLOWED_SCHEMA, ALLOWED_FIELDS
+from app.config import ALLOWED_SCHEMA
 
 
 class PositionGenerator:
@@ -36,8 +36,8 @@ class PositionGenerator:
 
 
 def get_allowed_sql_fields():
-    internal_fields = list(ALLOWED_FIELDS["internal"].values())
-    external_fields = list(ALLOWED_FIELDS["external"].values())
+    internal_fields = [col.db_name for col in ALLOWED_SCHEMA["internal"].values()]
+    external_fields = [col.db_name for col in ALLOWED_SCHEMA["external"].values()]
     return set(internal_fields + external_fields)
 
 
@@ -112,8 +112,8 @@ def smiles_to_png_base64(smiles):
 
 
 def export_to_excel(user, compounds):
-    order = list(ALLOWED_FIELDS[user.affiliation].values())
-    col_names = list(ALLOWED_FIELDS[user.affiliation].keys())
+    order = [col.db_name for col in ALLOWED_SCHEMA[user.affiliation].values()]
+    col_names = [col.db_name for col in ALLOWED_SCHEMA[user.affiliation].keys()]
 
     cmpd_data = [c.__dict__ for c in compounds]
     for row in cmpd_data:
@@ -127,4 +127,5 @@ def export_to_excel(user, compounds):
 
 
 def rename_columns(df, affiliation):
-    return df.rename(columns=ALLOWED_FIELDS[affiliation])
+    rename_dict = {key: val.db_name for key, val in ALLOWED_SCHEMA[affiliation].items()}
+    return df.rename(columns=rename_dict)
