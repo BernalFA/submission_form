@@ -65,6 +65,7 @@ def index():
     "/upload/<string:affiliation>/<string:delivery>", methods=["GET", "POST"]
 )
 def upload(affiliation, delivery):
+    user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     include_structures = session["include_structures"]
     if request.method == "POST":
@@ -72,6 +73,7 @@ def upload(affiliation, delivery):
         entry = make_input_valid(entry)
         if entry:
             entry["session_id"] = session["session_id"]
+            entry["user_id"] = user.id
             if delivery in ["vials_solid", "vials_solution"]:
                 entry["position"] = position_generator.get_position()
             if include_structures and affiliation == "external":
