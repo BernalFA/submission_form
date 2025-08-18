@@ -6,7 +6,7 @@ import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import Draw
 
-from app.config import ALLOWED_SCHEMA
+from app.config import ALLOWED_SCHEMA, ColumnRule
 
 
 class PositionGenerator:
@@ -69,11 +69,10 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def validate_excel_template(df, collaborator):
-    schema = ALLOWED_SCHEMA[collaborator]
+def validate_excel_template(df, affiliation, delivery, sample_type, structures):
+    schema = customize_schema(affiliation, delivery, sample_type, structures)
 
     errors = []
-
     # check for missing or extra columns
     expected_columns = list(schema.keys())
     missing = set(expected_columns) - set(df.columns)
@@ -98,6 +97,23 @@ def validate_excel_template(df, collaborator):
                     )
 
     return errors
+
+
+def customize_schema(affiliation, delivery, sample_type, structures):
+    schema = ALLOWED_SCHEMA[affiliation]
+    if delivery == "vials_solid":
+        schema["Volume (µl)"] = ColumnRule(required=False, db_name="vol")
+        schema["Conc. (mM)"] = ColumnRule(required=False, db_name="conc")
+    else:
+        schema["Amount (mg)"] = ColumnRule(required=False, db_name="amount")
+
+    if sample_type == "isolated":
+        if affiliation == "external":
+            if structures:
+                schema["SMILES"] = ColumnRule(required=True, db_name="smiles")
+            else:
+                schema["Molecular weight"] = ColumnRule(required=True, db_name="mw")
+    return schema
 
 
 def smiles_to_png_base64(smiles):

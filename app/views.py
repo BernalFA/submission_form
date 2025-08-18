@@ -157,7 +157,7 @@ def upload_from_file(affiliation):
             how="all",
             inplace=True
         )
-        errors = validate_excel_template(df, affiliation)
+        errors = validate_excel_template(df, affiliation, delivery=session["delivery"], sample_type=session["sample_type"], structures=session["include_structures"])
         if errors:
             for error in errors:
                 flash(error)
