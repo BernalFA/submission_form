@@ -136,6 +136,7 @@ def download_template(affiliation):
 
 @main_bp.route("/upload_from_file/<string:affiliation>", methods=["GET", "POST"])
 def upload_from_file(affiliation):
+    user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
     compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
     delivery = session["delivery"]
     if request.method == "POST":
@@ -165,6 +166,7 @@ def upload_from_file(affiliation):
         )
         df = rename_columns(df, affiliation)
         df["session_id"] = session["session_id"]
+        df["user_id"] = user.id
         if affiliation == "external":
             df["png"] = df["smiles"].apply(smiles_to_png_base64)
 
