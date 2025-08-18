@@ -150,13 +150,6 @@ def upload_from_file(affiliation):
             flash("Invalid file type!")
             return redirect(request.url)
 
-        file_bytes = file.read()
-        file.seek(0)  # Reset stream pointer after reading
-
-        if not validate_excel_template(file_bytes, affiliation):
-            flash("Uploaded Excel file does not match the expected template!")
-            return redirect(request.url)
-
         df = pd.read_excel(file)
         session["upload_failed"] = False
         df.dropna(
@@ -164,6 +157,12 @@ def upload_from_file(affiliation):
             how="all",
             inplace=True
         )
+        errors = validate_excel_template(df, affiliation)
+        if errors:
+            for error in errors:
+                flash(error)
+            return redirect(request.url)
+
         df = rename_columns(df, affiliation)
         df["session_id"] = session["session_id"]
         df["user_id"] = user.id

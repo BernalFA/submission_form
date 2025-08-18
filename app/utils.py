@@ -1,14 +1,12 @@
 import base64
 import io
-from io import BytesIO
 from itertools import product
 
-import openpyxl
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import Draw
 
-from app.config import ALLOWED_FIELDS
+from app.config import ALLOWED_SCHEMA, ALLOWED_FIELDS
 
 
 class PositionGenerator:
@@ -71,18 +69,35 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# created by asking ChatGPT for template validation
-def validate_excel_template(file_bytes, collaborator):
-    try:
-        wb = openpyxl.load_workbook(BytesIO(file_bytes))
-        sheet = wb.active  # or use wb["sheet1"] if specific sheet
-        headers = [cell.value for cell in next(sheet.iter_rows(min_row=1, max_row=1))]
+def validate_excel_template(df, collaborator):
+    schema = ALLOWED_SCHEMA[collaborator]
 
-        return headers == list(ALLOWED_FIELDS[collaborator].keys())
+    errors = []
 
-    except Exception as e:
-        print("Excel validation error:", e)
-        return False
+    # check for missing or extra columns
+    expected_columns = list(schema.keys())
+    missing = set(expected_columns) - set(df.columns)
+    extra = set(df.columns) - set(expected_columns)
+    if missing:
+        errors.append(f"Missing columns: {', '.join(missing)}")
+    if extra:
+        errors.append(f"Unexpected columns: {', '.join(extra)}")
+
+    # validate each column according to schema
+    for col, rules in schema.items():
+        if rules.required:
+            if df[col].isnull().any():
+                errors.append(f"Missing data in required column: {col}")
+
+            if rules.type is not None:
+                if not df[col].map(
+                    lambda x: isinstance(x, rules.type) or pd.isnull(x)
+                ).all():
+                    errors.append(
+                        f"Invalid type in column '{col}': expected {rules.type}"
+                    )
+
+    return errors
 
 
 def smiles_to_png_base64(smiles):

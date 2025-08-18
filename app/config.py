@@ -1,5 +1,7 @@
 import os
+from dataclasses import dataclass
 from dotenv import load_dotenv
+from typing import Union, Optional
 
 # load key
 load_dotenv()
@@ -11,8 +13,47 @@ class Config:
     SQLALCHEMY_DATABASE_URI = "sqlite:///database.db"
 
 
-# Define fields for database creation
-# Excel name : html/SQL name
+@dataclass
+class ColumnRule:
+    required: bool
+    type: Optional[Union[str, int, float]] = None
+
+
+base_schema = {
+    "Position": ColumnRule(required=True, type=str),
+    "Stereo comment": ColumnRule(required=False),
+    "Molecular weight": ColumnRule(required=False),
+    "Amount (mg)": ColumnRule(required=True),
+    "Volume (µl)": ColumnRule(required=True),
+    "Conc. (mM)": ColumnRule(required=True),
+    "Project name": ColumnRule(required=True, type=str),
+    "Comment": ColumnRule(required=False),
+}
+
+internal_schema = {
+    **base_schema,
+    "Enso experiment name": ColumnRule(required=True, type=str),
+    "Product No": ColumnRule(required=False, type=int),
+}
+
+external_schema = {
+    **base_schema,
+    "Supplier": ColumnRule(required=False),
+    "Supplier ID": ColumnRule(required=True),
+    "Producer": ColumnRule(required=False),
+    "Trivial name": ColumnRule(required=False),
+    "Alternative names": ColumnRule(required=False),
+    "CAS": ColumnRule(required=False),
+    "SMILES": ColumnRule(required=False),
+    "Annotation": ColumnRule(required=False),
+}
+
+ALLOWED_SCHEMA = {
+    "internal": internal_schema,
+    "external": external_schema
+}
+
+
 ALLOWED_FIELDS = {
     "internal": {
         "Position": "position",
@@ -44,4 +85,3 @@ ALLOWED_FIELDS = {
         "Annotation": "annotation",
         "Comment": "comment",
     },
-}
