@@ -1,12 +1,13 @@
 import base64
 import io
+from datetime import datetime
 from itertools import product
 
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import Draw
 
-from app.config import ALLOWED_SCHEMA, ColumnRule
+from app.config import ALLOWED_SCHEMA, ColumnRule, EXPORT_DIR
 
 
 class PositionGenerator:
@@ -207,9 +208,9 @@ def export_to_excel(user, compounds):
         compounds (SQLAlchemy.Model.query): query of the CompoundManager table.
     """
     order = [col.db_name for col in ALLOWED_SCHEMA[user.affiliation].values()]
-    col_names = [col.db_name for col in ALLOWED_SCHEMA[user.affiliation].keys()]
+    col_names = [col for col in ALLOWED_SCHEMA[user.affiliation].keys()]
 
-    cmpd_data = [c.to_dict() for c in compounds]
+    cmpd_data = [c.__dict__ for c in compounds]
     for row in cmpd_data:
         row.pop("_sa_instance_state", None)
         row.pop("id", None)
@@ -217,7 +218,8 @@ def export_to_excel(user, compounds):
     df = df[order]
     df.columns = col_names
 
-    filepath = f"/home/freddy/Documents/{user.username}_{user.affiliation}.xlsx"
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filepath = f"{EXPORT_DIR}{user.username}_{user.affiliation}_{timestamp}.xlsx"
 
     with pd.ExcelWriter(filepath, engine="openpyxl") as writer:
         df.to_excel(writer, index=False)
