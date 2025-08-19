@@ -209,15 +209,18 @@ def export_to_excel(user, compounds):
     order = [col.db_name for col in ALLOWED_SCHEMA[user.affiliation].values()]
     col_names = [col.db_name for col in ALLOWED_SCHEMA[user.affiliation].keys()]
 
-    cmpd_data = [c.__dict__ for c in compounds]
+    cmpd_data = [c.to_dict() for c in compounds]
     for row in cmpd_data:
         row.pop("_sa_instance_state", None)
         row.pop("id", None)
     df = pd.DataFrame(cmpd_data)
     df = df[order]
     df.columns = col_names
+
     filepath = f"/home/freddy/Documents/{user.username}_{user.affiliation}.xlsx"
-    df.to_excel(filepath, index=False)
+
+    with pd.ExcelWriter(filepath, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False)
 
 
 def rename_columns(df, affiliation):
