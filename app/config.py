@@ -13,7 +13,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = "sqlite:///database.db"
 
 
-# define column names
+# define column names configuration
 @dataclass
 class ColumnRule:
     required: bool
@@ -21,6 +21,7 @@ class ColumnRule:
     type: Optional[Union[str, int, float]] = None
 
 
+# Define schemas
 base_schema = {
     "Position": ColumnRule(required=True, db_name="position", type=str),
     "Stereo comment": ColumnRule(required=True, db_name="stereo_comment"),

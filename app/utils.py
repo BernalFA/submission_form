@@ -10,19 +10,33 @@ from app.config import ALLOWED_SCHEMA, ColumnRule
 
 
 class PositionGenerator:
+    """Utility for automatic assignment of a position in a 96-well plate"""
+
     def __init__(self):
         self._positions = iter(self._create_plate_positions())
 
     def get_position(self):
+        """Assign next position in a 96-well plate if places still available from
+        _create_plate_positions. If there is no place, no position will be assigned.
+
+        Returns:
+            str: plate position (e.g. B01)
+        """
         try:
             return next(self._positions)
         except StopIteration:
             print("Plate full")
 
     def reset(self):
+        """helper method to reset plate to first position (empty plate)"""
         self._positions = iter(self._create_plate_positions())
 
     def _create_plate_positions(self):
+        """Generate basic 96-well plate naming for each well (position).
+
+        Returns:
+            list: positions in 96-well plate.
+        """
         nums = range(1, 13)
         letters = [chr(character) for character in range(ord("A"), ord("H") + 1)]
 
@@ -36,12 +50,27 @@ class PositionGenerator:
 
 
 def get_allowed_sql_fields():
+    """Check the ALLOWED_SCHEMA and return the unique set of field names allowed in
+    the database.
+
+    Returns:
+        set: allowed field names
+    """
     internal_fields = [col.db_name for col in ALLOWED_SCHEMA["internal"].values()]
     external_fields = [col.db_name for col in ALLOWED_SCHEMA["external"].values()]
     return set(internal_fields + external_fields)
 
 
 def make_input_valid(entry):
+    """Manage user input and return it using the correct/expected type. It is necessary
+    before commiting to database to avoid format errors.
+
+    Args:
+        entry (dict): user entry (typically Flask form/dict)
+
+    Returns:
+        dict: entries using the correct type.
+    """
     numeric = ["p_num", "mw", "amount", "vol", "conc"]
     res = {}
     for key, value in entry.items():
@@ -66,10 +95,33 @@ ALLOWED_EXTENSIONS = {"xlsx"}
 
 
 def allowed_file(filename):
+    """Simple check of file correctness by file extension.
+
+    Args:
+        filename (str): filename
+
+    Returns:
+        bool: True if file has correct extension.
+    """
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def validate_excel_template(df, affiliation, delivery, sample_type, structures):
+    """Helper function to validate Excel file submitted by user. It first customize
+    the default schema based on user input. Then verification of expected columns and
+    their content (when required) is carried out. Options must match those given by
+    UserDataForm in forms.
+
+    Args:
+        df (pd.DataFrame): dataframe from user input Excel.
+        affiliation (str): collaborator type.
+        delivery (str): mode of sample delivery.
+        sample_type (str): type of sample.
+        structures (bool): whether chemical structures are shared.
+
+    Returns:
+        list: list of errors found (if any)
+    """
     schema = customize_schema(affiliation, delivery, sample_type, structures)
 
     errors = []
@@ -100,6 +152,18 @@ def validate_excel_template(df, affiliation, delivery, sample_type, structures):
 
 
 def customize_schema(affiliation, delivery, sample_type, structures):
+    """Change default schema based on user input (necessary to avoid conflicts upon
+    file content validation). Options must match those given by UserDataForm in forms.
+
+    Args:
+        affiliation (str): collaborator type.
+        delivery (str): mode of sample delivery.
+        sample_type (str): type of sample.
+        structures (bool): whether chemical structures are shared.
+
+    Returns:
+        dict: customized schema
+    """
     schema = ALLOWED_SCHEMA[affiliation]
     if delivery == "vials_solid":
         schema["Volume (µl)"] = ColumnRule(required=False, db_name="vol")
@@ -117,6 +181,14 @@ def customize_schema(affiliation, delivery, sample_type, structures):
 
 
 def smiles_to_png_base64(smiles):
+    """Transform SMILES string into PNG image (compatible with HTML and Flask display).
+
+    Args:
+        smiles (str): SMILES string of specified compound.
+
+    Returns:
+        base64: enconding of PNG generated image for the molecule.
+    """
     try:
         mol = Chem.MolFromSmiles(smiles)
     except TypeError:
@@ -128,6 +200,12 @@ def smiles_to_png_base64(smiles):
 
 
 def export_to_excel(user, compounds):
+    """Create an Excel file containing the compounds the user has registered.
+
+    Args:
+        user (SQLAlchemy.Model.query): query of the UserManager table.
+        compounds (SQLAlchemy.Model.query): query of the CompoundManager table.
+    """
     order = [col.db_name for col in ALLOWED_SCHEMA[user.affiliation].values()]
     col_names = [col.db_name for col in ALLOWED_SCHEMA[user.affiliation].keys()]
 
@@ -143,5 +221,15 @@ def export_to_excel(user, compounds):
 
 
 def rename_columns(df, affiliation):
+    """Change names of columns in given dataframe to match those in the SQLAlchemy
+    database.
+
+    Args:
+        df (pd.DataFrame): dataframe with user provided compound information.
+        affiliation (str): type of collaboration.
+
+    Returns:
+        pd.DataFrame: dataframe with columns matching the SQL database fields.
+    """
     rename_dict = {key: val.db_name for key, val in ALLOWED_SCHEMA[affiliation].items()}
     return df.rename(columns=rename_dict)
