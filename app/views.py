@@ -109,25 +109,6 @@ def upload(affiliation, delivery):
     return render_template(template, **kwargs)
 
 
-@main_bp.route("/summary/<string:affiliation>")
-def summary(affiliation):
-    compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
-    user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
-    kwargs = {
-        "user": user,
-        "delivery": session["delivery"],
-        "sample_type": session["sample_type"],
-        "include_structures": session["include_structures"],
-        "compounds": compounds
-    }
-    return render_template(f"summary_{affiliation}.html", **kwargs)
-
-
-@main_bp.route("/end")
-def end():
-    return render_template("end.html")
-
-
 @main_bp.route("/download/<string:affiliation>")
 def download_template(affiliation):
     filename = f"{affiliation.upper()}_Compound_submission.xlsx"
@@ -196,13 +177,18 @@ def upload_from_file(affiliation):
     return render_template("upload_from_file.html", **kwargs)
 
 
-@main_bp.route("/mol_png/<int:mol_id>")
-def mol_png(mol_id):
-    cmpd = CompoundManager.query.get_or_404(mol_id)
-    if not cmpd.png:
-        return Response("Image not found", status=404)
-    html = f'<img src="data:image/png;base64,{cmpd.png}" width="200" height="200">'
-    return html
+@main_bp.route("/summary/<string:affiliation>")
+def summary(affiliation):
+    compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
+    user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
+    kwargs = {
+        "user": user,
+        "delivery": session["delivery"],
+        "sample_type": session["sample_type"],
+        "include_structures": session["include_structures"],
+        "compounds": compounds
+    }
+    return render_template(f"summary_{affiliation}.html", **kwargs)
 
 
 @main_bp.route("/reset")
@@ -215,3 +201,17 @@ def reset_session():
     session.clear()
     position_generator.reset()
     return redirect(url_for("main.end"))
+
+
+@main_bp.route("/end")
+def end():
+    return render_template("end.html")
+
+
+@main_bp.route("/mol_png/<int:mol_id>")
+def mol_png(mol_id):
+    cmpd = CompoundManager.query.get_or_404(mol_id)
+    if not cmpd.png:
+        return Response("Image not found", status=404)
+    html = f'<img src="data:image/png;base64,{cmpd.png}" width="200" height="200">'
+    return html
