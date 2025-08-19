@@ -17,7 +17,7 @@ from app.models import UserManager, CompoundManager
 from app.utils import (
     PositionGenerator,
     allowed_file,
-    # export_to_excel,
+    export_to_excel,
     make_input_valid,
     rename_columns,
     smiles_to_png_base64,
@@ -189,6 +189,16 @@ def summary(affiliation):
         "compounds": compounds
     }
     return render_template(f"summary_{affiliation}.html", **kwargs)
+
+
+@main_bp.route("/store")
+def store():
+    compounds = CompoundManager.query.filter_by(session_id=session["session_id"]).all()
+    user = UserManager.query.filter_by(session_id=session["session_id"]).all()[0]
+    session_id = session.get("session_id")
+    if session_id:
+        export_to_excel(user, compounds)
+    return redirect(url_for("main.reset_session"))
 
 
 @main_bp.route("/reset")
