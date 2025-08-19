@@ -7,6 +7,10 @@ from typing import Union, Optional
 load_dotenv()
 
 
+# define export directory
+EXPORT_DIR = "/home/freddy/Documents/"
+
+
 # define Flask-SQLAlchemy configuration
 class Config:
     SECRET_KEY = os.getenv("FLASK-WTFS_KEY")
