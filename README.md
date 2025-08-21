@@ -12,11 +12,7 @@ A Flask web application for submitting compound information for the registration
 
 ## Requirements
 
-This application requires `Python 3.12`. If not already installed, please do it with
-
-```bash
-sudo apt install -y python3.12 python3.12-venv python3.12-dev python3.12-distutils
-```
+This application requires `Python 3.12`. 
 
 ## Setup
 
