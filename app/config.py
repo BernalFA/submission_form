@@ -15,6 +15,9 @@ EXPORT_DIR = os.getenv("EXPORT_FOLDER")
 class Config:
     SECRET_KEY = os.getenv("FLASK-WTFS_KEY")
     SQLALCHEMY_DATABASE_URI = "sqlite:///database.db"
+    SESSION_COOKIE_SECURE = True  # cookies over HTTPS only
+    SESSION_COOKIE_HTTPONLY = True  # prevent JS from stealing cookies
+    SESSION_COOKIE_SAMESITE = "Lax"  # stop CSRF from external sites
 
 
 # define column names configuration
