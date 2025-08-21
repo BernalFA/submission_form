@@ -8,7 +8,7 @@ load_dotenv()
 
 
 # define export directory
-EXPORT_DIR = "/home/freddy/Documents/"
+EXPORT_DIR = os.getenv("EXPORT_FOLDER")
 
 
 # define Flask-SQLAlchemy configuration
