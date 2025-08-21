@@ -23,4 +23,9 @@ def create_app():
     # add blueprint
     app.register_blueprint(main_bp)
 
+    # Create tables
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+
     return app
